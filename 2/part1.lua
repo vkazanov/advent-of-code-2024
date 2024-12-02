@@ -1,6 +1,3 @@
--- Part 1
-
--- local file = io.open("input_test.txt", "r")
 local file = io.open("input.txt", "r")
 if not file then
    print("Error: Could not open file!")
