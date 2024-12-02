@@ -1,5 +1,7 @@
+local Part2 = {}
+
 local VALID_DIFF <const> = { [1] = true, [2] = true, [3] = true }
-local function is_safe(report)
+function Part2.is_safe(report)
     local prev_diff = nil
 
     for i = 2, #report do
@@ -21,7 +23,7 @@ local function is_safe(report)
     return true
 end
 
-local function is_dampened_safe(report)
+function Part2.is_dampened_safe(report)
     -- find a safe report, also skip an element when checking if necessary (note i = 0)
     for i = 0, #report do
         -- build a dumpened report
@@ -32,7 +34,7 @@ local function is_dampened_safe(report)
             end
         end
 
-        if is_safe(subreport) then
+        if Part2.is_safe(subreport) then
             return true
         end
     end
@@ -40,7 +42,7 @@ local function is_dampened_safe(report)
     return false
 end
 
-local function parse_report(line)
+function Part2.parse_report(line)
     local report = {}
     for level in line:gmatch("%d+") do
         table.insert(report, tonumber(level))
@@ -48,21 +50,4 @@ local function parse_report(line)
     return report
 end
 
-local file = io.open("input.txt", "r")
-if not file then
-    print("Error: Could not open file!")
-    return
-end
-
-local safe_report_num = 0
-for line in file:lines() do
-
-    local report = parse_report(line)
-    if is_dampened_safe(report) then
-        safe_report_num = safe_report_num + 1
-    end
-end
-
-print("Safe report num: ", safe_report_num)
-
-file:close()
+return Part2
