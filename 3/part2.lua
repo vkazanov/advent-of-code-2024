@@ -30,7 +30,7 @@ function Part2.find(input)
             goto next_instr
         end
 
-        local m = string.match(instr_str, DONT_PATTERN)
+        m = string.match(instr_str, DONT_PATTERN)
         if m ~= nil then
             local instr = {
                 type = "DONT",
