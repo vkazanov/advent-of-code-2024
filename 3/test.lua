@@ -38,6 +38,7 @@ do
     assert(P1.run(instrs)== 161)
 end
 
+-- Part 1
 do
     local file = io.open("input.txt", "r")
     if not file then
@@ -48,6 +49,7 @@ do
     file:close()
 
     local instrs = P1.find(line)
-    print(#instrs)
-    print(P1.run(instrs))
+    assert(#instrs == 746, "Wrong instr num")
+    local res = P1.run(instrs)
+    assert(res == 173785482, "Wrong result")
 end
