@@ -3,7 +3,6 @@ local Part1 = {}
 function Part1.find(input)
     local instructions = {}
     for instr_str in input:gmatch("mul%(%d%d?%d?,%d%d?%d?%)") do
-        -- print(instr_str)
         local left, right = string.match(instr_str, "mul%((%d+),(%d+)%)")
         local instr = {
             left = tonumber(left),
