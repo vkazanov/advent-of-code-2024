@@ -164,7 +164,7 @@ do
                 is_correct, mid = check(rules, fixed_update)
             until is_correct
             print("mid: " .. mid)
-
+            debug.debug()
             num_fixed = num_fixed + 1
             count_fixed = count_fixed + mid
             print("fixed")
