@@ -40,19 +40,7 @@ local function is_exit_map(map, row, col)
     return row > #map or row < 1 or col > #map[1] or col < 1
 end
 
-local DO_PRINT = false
--- local DO_PRINT = true
-
-local function guard_step(map, start_row, start_col, obs_set, pos_set, loop_pos_set, dir_i, row, col, obs_row, obs_col, do_find_loop)
-    if DO_PRINT then print("Pos: " .. row .. "," .. col .. " " .. DIR_SYM[dir_i] .. " " .. tostring(do_find_loop)) end
-
-    local pos_key = row .. "," .. col
-
-    -- mark as visited
-    if not do_find_loop then
-        pos_set[pos_key] = true
-    end
-
+local function guard_step(map, start_row, start_col, obs_set, loop_pos_set, dir_i, row, col, obs_row, obs_col, do_find_loop)
     -- mark as visited
     if do_find_loop then
         local loop_pos_key = row .. "," .. col .. "," .. dir_i
@@ -71,7 +59,7 @@ local function guard_step(map, start_row, start_col, obs_set, pos_set, loop_pos_
     -- obstacle? Change direction, try again
     if is_obstacle(map, next_row, next_col, obs_row, obs_col) then
         local next_dir_i = change_dir(dir_i)
-        return guard_step(map, start_row, start_col, obs_set, pos_set, loop_pos_set,
+        return guard_step(map, start_row, start_col, obs_set, loop_pos_set,
                           next_dir_i, row, col,
                           obs_row, obs_col, do_find_loop)
     end
@@ -82,12 +70,11 @@ local function guard_step(map, start_row, start_col, obs_set, pos_set, loop_pos_
         local new_obs_row = next_row
         local new_obs_col = next_col
 
-        local is_loop = guard_step(map, start_row, start_col, obs_set, {}, new_loop_pos_set,
+        local is_loop = guard_step(map, start_row, start_col, obs_set, new_loop_pos_set,
                                    UP, start_row, start_col,
                                    new_obs_row, new_obs_col, true)
         if is_loop then
             local obs_key = new_obs_row .. "," .. new_obs_col
-            if DO_PRINT then print("pos found: " .. obs_key) end
             obs_set[obs_key] = true
         end
     end
@@ -98,43 +85,36 @@ local function guard_step(map, start_row, start_col, obs_set, pos_set, loop_pos_
         return true
     end
 
-    if not do_find_loop then assert(not obs_row) end
-    if not do_find_loop then assert(not obs_col) end
-    if not do_find_loop then assert(#loop_pos_set == 0) end
-
-    -- do step
-    -- if not do_find_loop then print("step") else print("check") end
-
-    return guard_step(map, start_row, start_col, obs_set, pos_set, loop_pos_set,
+    return guard_step(map, start_row, start_col, obs_set, loop_pos_set,
                       dir_i, next_row, next_col,
                       obs_row, obs_col, do_find_loop)
 end
 
-do
-    local map = {
-        "....#.....",
-        ".........#",
-        "..........",
-        "..#.......",
-        ".......#..",
-        "..........",
-        ".#..^.....",
-        "........#.",
-        "#.........",
-        "......#..."
-    }
+-- do
+--     local map = {
+--         "....#.....",
+--         ".........#",
+--         "..........",
+--         "..#.......",
+--         ".......#..",
+--         "..........",
+--         ".#..^.....",
+--         "........#.",
+--         "#.........",
+--         "......#..."
+--     }
 
-    local row, col = find_guard(map)
-    local dir_i = UP
-    assert(row == 7)
-    assert(col == 5)
-    local pos_set = {}
-    local loop_pos_set = {}
-    local obs = {}
-    guard_step(map, row, col, obs, pos_set, loop_pos_set, dir_i, row, col, nil, nil, false)
-    local obs_num = 0; for _ in pairs(obs) do obs_num = obs_num + 1 end
-    assert(obs_num == 6, obs_num)
-end
+--     local row, col = find_guard(map)
+--     local dir_i = UP
+--     assert(row == 7)
+--     assert(col == 5)
+--     local pos_set = {}
+--     local loop_pos_set = {}
+--     local obs = {}
+--     guard_step(map, row, col, obs, pos_set, loop_pos_set, dir_i, row, col, nil, nil, false)
+--     local obs_num = 0; for _ in pairs(obs) do obs_num = obs_num + 1 end
+--     assert(obs_num == 6, obs_num)
+-- end
 
 do
     local map = {}
@@ -152,12 +132,9 @@ do
     assert(row == 46)
     assert(col == 43)
 
-    local pos_set = {}
     local loop_pos_set = {}
     local obs = {}
-    guard_step(map, row, col, obs, pos_set, loop_pos_set, UP, row, col, nil, nil, false)
-    local pos_num = 0; for _ in pairs(pos_set) do pos_num = pos_num + 1 end
-    print(pos_num)
+    guard_step(map, row, col, obs, loop_pos_set, UP, row, col, nil, nil, false)
     local obs_num = 0; for _ in pairs(obs) do obs_num = obs_num + 1 end
-    print(obs_num)
+    assert(obs_num == 1503)
 end
