@@ -37,15 +37,14 @@ local function find_antinodes(nodes, max_r, max_c)
             local r_diff = right.row - left.row
             local c_diff = right.col - left.col
 
-            local anti_r = right.row + r_diff
-            local anti_c = right.col + c_diff
+            local anti_r = right.row
+            local anti_c = right.col
 
-            if anti_r > max_r or anti_r < 1 or anti_c > max_c or anti_c < 1 then
-                goto continue
+            while anti_r <= max_r and anti_r >= 1 and anti_c <= max_c and anti_c >= 1 do
+                if PRINT then print("anti: " .. anti_r .. "/" .. anti_c) end
+                tins(antinodes, { row = anti_r, col = anti_c })
+                anti_r = anti_r + r_diff; anti_c = anti_c + c_diff
             end
-
-            if PRINT then print("anti: " .. anti_r .. "/" .. anti_c) end
-            tins(antinodes, { row = anti_r, col = anti_c })
 
             ::continue::
         end
@@ -102,9 +101,7 @@ do
     assert(#freq2coords["a"] == 2)
 
     local antinodes = find_antinodes(freq2coords["a"], #map, #map[1])
-    assert(#antinodes == 1)
-    assert(antinodes[1].row == 1)
-    assert(antinodes[1].col == 1)
+    assert(#antinodes == 3, #antinodes)
 end
 
 do
@@ -116,9 +113,7 @@ do
     assert(#freq2coords["a"] == 2)
 
     local antinodes = find_antinodes(freq2coords["a"], #map, #map[1])
-    assert(#antinodes == 1)
-    assert(antinodes[1].row == 1)
-    assert(antinodes[1].col == 7)
+    assert(#antinodes == 3)
 end
 
 do
@@ -141,77 +136,37 @@ do
     assert(#freq2coords["a"] == 2)
 
     local antinodes = find_antinodes(freq2coords["a"], #map, #map[1])
-    assert(#antinodes == 2)
-    assert(antinodes[1].row == 10)
-    assert(antinodes[1].col == 1)
-    assert(antinodes[2].row == 1)
-    assert(antinodes[2].col == 1)
+    assert(#antinodes == 4)
 end
 
 do
     if PRINT then print("NEXT") end
 
     local map = {
+        { "T", ".", ".", ".", ".", ".", ".", ".", ".", "." },
+        { ".", ".", ".", "T", ".", ".", ".", ".", ".", "." },
+        { ".", "T", ".", ".", ".", ".", ".", ".", ".", "." },
         { ".", ".", ".", ".", ".", ".", ".", ".", ".", "." },
         { ".", ".", ".", ".", ".", ".", ".", ".", ".", "." },
         { ".", ".", ".", ".", ".", ".", ".", ".", ".", "." },
-        { ".", ".", ".", ".", "a", ".", ".", ".", ".", "." },
-        { ".", ".", ".", ".", ".", ".", ".", ".", "a", "." },
-        { ".", ".", ".", ".", ".", "a", ".", ".", ".", "." },
         { ".", ".", ".", ".", ".", ".", ".", ".", ".", "." },
         { ".", ".", ".", ".", ".", ".", ".", ".", ".", "." },
         { ".", ".", ".", ".", ".", ".", ".", ".", ".", "." },
         { ".", ".", ".", ".", ".", ".", ".", ".", ".", "." },
     }
     local freq2coords = find_nodes(map)
-    assert(freq2coords["a"])
-    assert(#freq2coords["a"] == 3)
-
-    local antinodes = find_antinodes(freq2coords["a"], #map, #map[1])
-    assert(#antinodes == 4, #antinodes)
-    assert(antinodes[1].row == 8)
-    assert(antinodes[1].col == 7)
-    assert(antinodes[2].row == 3)
-    assert(antinodes[2].col == 1)
-    assert(antinodes[3].row == 7)
-    assert(antinodes[3].col == 3)
-    assert(antinodes[4].row == 2)
-    assert(antinodes[4].col == 4)
-end
-
-do
-    local map = {
-        {".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", ".", "0", ".", ".", ".", },
-        {".", ".", ".", ".", ".", "0", ".", ".", ".", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", "0", ".", ".", ".", ".", },
-        {".", ".", ".", ".", "0", ".", ".", ".", ".", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", "A", ".", ".", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", ".", "A", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", ".", ".", "A", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", },
-        {".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", }
-    }
-
-    local freq2coords = find_nodes(map)
-    assert(freq2coords["A"])
-    assert(freq2coords["0"])
-    assert(#freq2coords["A"] == 3)
-    assert(#freq2coords["0"] == 4)
+    assert(freq2coords["T"])
+    assert(#freq2coords["T"] == 3)
 
     local anti_set = {}
-    for _, nodes in pairs(freq2coords) do
-        local antinodes = find_antinodes(nodes, #map, #map[1])
-        for _, anti in pairs(antinodes) do
-            local key = anti.row .. "|" .. anti.col
-            anti_set[key] = true
-        end
+    local antinodes = find_antinodes(freq2coords["T"], #map, #map[1])
+    for _, anti in pairs(antinodes) do
+        local key = anti.row .. "|" .. anti.col
+        anti_set[key] = true
     end
 
     local count = 0; for _, _ in pairs(anti_set) do count = count + 1 end
-    assert(count == 14)
+    assert(count == 9)
 end
 
 do
