@@ -39,6 +39,8 @@ local function calc(sum, numbers, operators)
     return num_stack[1] == sum
 end
 
+-- TODO: possible to skin branches if doing calc on the fly and pruning when the running
+-- sum is too big to be viable
 local function check(sum, numbers, i, operators)
     if DOPRINT then print(sum .. ": " .. table.concat(numbers, ",") .. "[" .. tostring(i) .. "]") end
 
