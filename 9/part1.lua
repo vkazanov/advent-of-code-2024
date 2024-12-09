@@ -1,9 +1,10 @@
+local aoc = require("aoc")
+
+local mayprint = aoc.mayprint
+
 local tins = table.insert
 local tcon = table.concat
 local trem = table.remove
-
-local PRINT = false
--- local PRINT = true
 
 local function readformat(format)
     assert(#format % 2 == 1)
@@ -15,7 +16,7 @@ local function readformat(format)
     while i < #format do
         local block_size = format[i]; i = i + 1
         local free_size = format[i]; i = i + 1
-        if PRINT then print(block_size .. "|" .. free_size) end
+        if PRINT then mayprint(block_size .. "|" .. free_size) end
 
         while block_size > 0 do
             tins(output, block_id)
@@ -31,21 +32,21 @@ local function readformat(format)
     end
 
     local block_size = format[i]
-    if PRINT then print(block_size) end
+    if PRINT then mayprint(block_size) end
 
     while block_size > 0 do
         tins(output, block_id)
         block_size = block_size - 1
     end
 
-    if PRINT then print(tcon(output, ",")) end
+    if PRINT then mayprint(tcon(output, ",")) end
     return output
 end
 
 local function compr(output, t_i)
     if PRINT then
-        print("t_i = " .. tostring(t_i))
-        print(tcon(output, ","))
+        mayprint("t_i = " .. tostring(t_i))
+        mayprint(tcon(output, ","))
     end
 
     if #output < 1 then return end
@@ -57,7 +58,7 @@ local function compr(output, t_i)
     if output[t_i] ~= -1 then compr(output, t_i + 1); return end
 
     local rightmost = trem(output)
-    if PRINT then print("move " .. rightmost .. " to " .. t_i) end
+    if PRINT then mayprint("move " .. rightmost .. " to " .. t_i) end
     output[t_i] = rightmost
     compr(output, t_i + 1)
 end
@@ -106,7 +107,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    if PRINT then mayprint("NEXT") end
     local un = { 1, -1, 2 }
     compr(un)
     assert(#un == 2)
@@ -114,7 +115,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    if PRINT then mayprint("NEXT") end
     local un = {
         0, 0, -1, -1, -1, 1, 1, 1, -1, -1, -1, 2, -1, -1, -1, 3, 3, 3, -1, 4, 4, -1, 5, 5, 5, 5, -1, 6, 6, 6, 6, -1, 7, 7, 7, -1, 8, 8, 8, 8, 9, 9,
     }
@@ -149,5 +150,5 @@ do
 
     local un = readformat(input)
     compr(un)
-    print(checksum(un) == 6398608069280)
+    mayprint(checksum(un) == 6398608069280)
 end
