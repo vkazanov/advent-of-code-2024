@@ -1,8 +1,7 @@
 local aoc = require "aoc"
 
-local mayprint = aoc.mayprint
-
 aoc.PRINT = true
+local mayprint = aoc.mayprint
 
 local tins = aoc.tins
 local tcon = aoc.tcon
