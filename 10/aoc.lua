@@ -5,7 +5,6 @@ aoc.tcon = table.concat
 aoc.trem = table.remove
 
 aoc.PRINT = false
-
 function aoc.mayprint(...)
     if aoc.PRINT then
         print(...)
@@ -13,12 +12,14 @@ function aoc.mayprint(...)
 end
 
 function aoc.fline(fname)
-    return io.open(fname, "r"):read("*all")
+    local f <close> = io.open(fname, "r")
+    return f:read("*all")
 end
 
 function aoc.flines(fname)
+    local f <close> = io.open(fname, "r")
     local lines = {}
-    for l in io.open(fname, "r"):lines() do table.insert(lines, l) end
+    for l in f:lines() do table.insert(lines, l) end
     return lines
 end
 
@@ -52,5 +53,9 @@ function aoc.str_to_intarr(str)
     return aoc.str_to_arr(str, tonumber)
 end
 
+function aoc.foldl(f, acc, list)
+  for _, v in ipairs(list) do acc = f(acc, v) end
+  return acc
+end
 
 return aoc

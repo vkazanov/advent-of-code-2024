@@ -112,7 +112,7 @@ local function compr(input, r_i)
 
     ::check_next::
     mayprint("move next")
-    compr(input, right_start - 1)
+    return compr(input, right_start - 1)
 end
 
 local function checksum(input)
