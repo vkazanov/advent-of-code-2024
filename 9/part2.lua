@@ -1,9 +1,11 @@
-local tins = table.insert
-local tcon = table.concat
-local trem = table.remove
+local aoc = require "aoc"
 
-local PRINT = false
--- local PRINT = true
+aoc.PRINT = false
+
+local mayprint = aoc.mayprint
+local tins = aoc.tins
+local tcon = aoc.tcon
+local trem = aoc.trem
 
 local function readformat(format)
     assert(#format % 2 == 1)
@@ -15,7 +17,7 @@ local function readformat(format)
     while i < #format do
         local block_size = format[i]; i = i + 1
         local free_size = format[i]; i = i + 1
-        if PRINT then print(block_size .. "|" .. free_size) end
+        mayprint(block_size .. "|" .. free_size)
 
         while block_size > 0 do
             tins(output, block_id)
@@ -31,14 +33,14 @@ local function readformat(format)
     end
 
     local block_size = format[i]
-    if PRINT then print(block_size) end
+    mayprint(block_size)
 
     while block_size > 0 do
         tins(output, block_id)
         block_size = block_size - 1
     end
 
-    if PRINT then print(tcon(output, ",")) end
+    mayprint(tcon(output, ","))
     return output
 end
 
@@ -63,10 +65,9 @@ local function span_rightof(input, s_i)
 end
 
 local function compr(input, r_i)
-    if PRINT then
-        print(" r_i=" .. tostring(r_i))
-        print(tcon(input))
-    end
+    mayprint(" r_i=" .. tostring(r_i))
+    mayprint(tcon(input))
+
     if not r_i then r_i = #input end
 
     -- checked everything
@@ -77,28 +78,28 @@ local function compr(input, r_i)
 
     -- find current span to move
     local right_start, right_len = span_leftof(input, r_i)
-    if PRINT then print("to move: r_i=" .. right_start .. " len=" .. right_len) end
+    mayprint("to move: r_i=" .. right_start .. " len=" .. right_len)
 
     -- see if there any suitable size spans on the left of the span
     local span_start = 1
 
-    if PRINT then print("check next empty: i=" .. span_start) end
+    mayprint("check next empty: i=" .. span_start)
     local _, span_len = span_rightof(input, span_start)
 
     while (input[span_start] ~= -1 or span_len < right_len) and span_start < right_start do
         span_start = span_start + span_len
 
-        if PRINT then print("check next empty: i=" .. span_start) end
+        mayprint("check next empty: i=" .. span_start)
         _, span_len = span_rightof(input, span_start)
     end
 
     if span_start >= right_start then
-        if PRINT then print("no empty: i=" .. span_start) end
+        mayprint("no empty: i=" .. span_start)
         goto check_next
     end
 
     -- check if fits and copy
-    if PRINT then print("copy to i=" .. span_start .. " from i=" .. right_start) end
+    mayprint("copy to i=" .. span_start .. " from i=" .. right_start)
     if span_len >= right_len then
         for i = 0, right_len - 1, 1 do
             -- print(i)
@@ -110,7 +111,7 @@ local function compr(input, r_i)
     end
 
     ::check_next::
-    if PRINT then print("move next") end
+    mayprint("move next")
     compr(input, right_start - 1)
 end
 
@@ -150,7 +151,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
 
     local input = {-1, -1, 1, 1, -1, -1}
     local s_start, s_len = span_leftof(input, #input)
@@ -178,7 +179,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
 
     local input = {1}
     local s_end, s_len = span_rightof(input, 1)
@@ -202,7 +203,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = { 1, -1, 2 }
     compr(un)
     -- print(tcon(un))
@@ -212,7 +213,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = { 1, 1, 1, -1, 2 }
     compr(un)
     -- print(tcon(un))
@@ -222,7 +223,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = { 1, 1, 2, 2, -1, -1, 3 }
     compr(un)
     -- print(tcon(un))
@@ -232,7 +233,7 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = { 1, 1, 2, 2, -1, -1, 3, 3 }
     compr(un)
     -- print(tcon(un))
@@ -243,7 +244,7 @@ end
 
 do
     -- no move
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = { 1, 1, 2, 2, -1, -1, 3, 3, 3 }
     compr(un)
     -- print(tcon(un))
@@ -261,7 +262,7 @@ end
 
 do
     -- no move
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = { 1, 1, 2, 2, -1, -1, 4, 4, 3, 3, 3 }
     compr(un)
     -- print(tcon(un))
@@ -282,7 +283,7 @@ end
 
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = { 1, -1, 2, 2 }
     compr(un)
     assert(#un == 4)
@@ -291,31 +292,24 @@ do
 end
 
 do
-    if PRINT then print("NEXT") end
+    mayprint("NEXT")
     local un = {
         0, 0, -1, -1, -1, 1, 1, 1, -1, -1, -1, 2, -1, -1, -1, 3, 3, 3, -1, 4, 4, -1, 5, 5, 5, 5, -1, 6, 6, 6, 6, -1, 7, 7, 7, -1, 8, 8, 8, 8, 9, 9,
     }
     assert(#un == #"00...111...2...333.44.5555.6666.777.888899")
     compr(un)
-    -- "00992111777.44.333....5555.6666.....8888.."
-    assert(un[1] == 0 and
-           un[2] == 0 and
-           un[3] == 9 and
-           un[4] == 9 and
-           un[5] == 2 and
-           un[6] == 1 and
-           -- ...
-           un[#un-3] == 8 and
-           un[#un-2] == 8 and
-           un[#un-1] == -1 and
-           un[#un] == -1
+    local correct = aoc.str_to_arr(
+        "00992111777.44.333....5555.6666.....8888..",
+        function (n) return n == "." and -1 or tonumber(n) end
     )
+    assert(aoc.arr_eq(un, correct))
     assert(checksum(un) == 2858)
 end
+
 do
     local input = {}
-    local line = io.open("input.txt", "r"):read("*all")
-    for i = 1, #line do tins(input, tonumber(line:sub(i, i))) end
+    local line = aoc.fline("input.txt")
+    for i = 1, #line do aoc.tins(input, tonumber(line:sub(i, i))) end
     assert(#input == 19999, #input)
     assert(input[1] == 9)
     assert(input[2] == 8)
