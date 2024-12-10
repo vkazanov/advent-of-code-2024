@@ -17,10 +17,8 @@ function aoc.fline(fname)
 end
 
 function aoc.flines(fname)
-    local f <close> = io.open(fname, "r")
-    local lines = {}
-    for l in f:lines() do table.insert(lines, l) end
-    return lines
+    local f = io.open(fname, "r")
+    return f:lines()
 end
 
 function aoc.arr_eq(arr1, arr2)
