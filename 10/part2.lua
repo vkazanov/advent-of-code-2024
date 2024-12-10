@@ -14,11 +14,6 @@ local function pos_key(pos)
     return pos.r .. "," .. pos.c
 end
 
-local function printpos(pos)
-    if not aoc.PRINT then return end
-    print(pos_key(pos))
-end
-
 local function mappify(lines)
   local map = {}
   local w = 1
