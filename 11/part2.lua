@@ -9,7 +9,7 @@ local trem = aoc.trem
 local tmov = aoc.tmov
 
 local ssplit = aoc.str_split
-local arreq = aoc.arr_eq
+local aeq = aoc.arr_eq
 
 local function blink_stone(stone)
     local stones = {}
@@ -48,12 +48,12 @@ end
 
 
 do
-    assert(arreq(blink_stone(0), {1}))
-    assert(arreq(blink_stone(1), {2024}))
-    assert(arreq(blink_stone(11), {1, 1}))
-    assert(arreq(blink_stone(1101), {11, 1}))
-    assert(arreq(blink_stone(1), {2024}))
-    assert(arreq(blink_stone(3), {3*2024}))
+    assert(aeq(blink_stone(0), {1}))
+    assert(aeq(blink_stone(1), {2024}))
+    assert(aeq(blink_stone(11), {1, 1}))
+    assert(aeq(blink_stone(1101), {11, 1}))
+    assert(aeq(blink_stone(1), {2024}))
+    assert(aeq(blink_stone(3), {3*2024}))
 end
 
 
