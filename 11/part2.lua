@@ -33,30 +33,13 @@ end
 local function blink(stones, times, cache)
     if not times then times = 1 end
     if not cache then cache = {} end
-
     if times == 0 then return #stones end
 
     local count = 0
     for _, s in ipairs(stones) do
-        local s_count
-
         local cache_key = s .. "*" .. times
-        local cache_val = cache[cache_key]
-        if cache_val then
-            s_count = cache_val
-            goto continue
-        end
-
-        do
-            local new_stones = blink_stone(s)
-            local new_times = times - 1
-            s_count = blink(new_stones, new_times, cache)
-        end
-
+        local s_count = cache[cache_key] or blink(blink_stone(s), times - 1, cache)
         cache[cache_key] = s_count
-
-        ::continue::
-
         count = count + s_count
     end
 
