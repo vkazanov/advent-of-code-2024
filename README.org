@@ -5,3 +5,5 @@
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)
+
+ - https://explog.in/notes/aoc.html - interesting notes and links
