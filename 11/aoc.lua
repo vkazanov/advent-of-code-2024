@@ -3,6 +3,7 @@ local aoc = {}
 aoc.tins = table.insert
 aoc.tcon = table.concat
 aoc.trem = table.remove
+aoc.tmov = table.move
 
 aoc.PRINT = true
 function aoc.mayprint(...)
