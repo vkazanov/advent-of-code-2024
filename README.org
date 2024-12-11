@@ -7,3 +7,6 @@
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)
 
  - https://explog.in/notes/aoc.html - interesting notes and links
+
+ - https://mmhaskell.com/blog/2023/1/30/advent-of-code-fetching-puzzle-input-using-the-api -
+   fetching inputs in Haskell
