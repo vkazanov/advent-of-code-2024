@@ -21,6 +21,15 @@ function aoc.flines(fname)
     return f:lines()
 end
 
+function aoc.str_split(str, conv, pattern)
+    if not conv then conv = tonumber; pattern = "%d+" end
+
+    local elements = {}
+    for e in str:gmatch(pattern) do aoc.tins(elements, conv(e)) end
+
+    return elements
+end
+
 function aoc.arr_eq(arr1, arr2)
     if #arr1 ~= #arr2 then
         return false
