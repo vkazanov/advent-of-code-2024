@@ -86,9 +86,10 @@ function aoc.pos(r, c)
     return p
 end
 
-function Pos.__eq(l, r) return (l.r == r.r) and (l.r == r.c) end
 function Pos.__add(l, r) return aoc.pos(l.r + r.r, l.r + r.c) end
 function Pos.__tostring(p) return p.r .. "," .. p.c end
+
+-- TODO: diagonal positions!
 function Pos:up() return aoc.pos(self.r - 1, self.c) end
 function Pos:right() return aoc.pos(self.r, self.c + 1) end
 function Pos:down() return aoc.pos(self.r + 1, self.c) end
@@ -115,7 +116,7 @@ function aoc.mappify(lines, conv_func)
     local map = setmetatable({}, Map)
     Map.__index = Map
 
-    conv_func = conv_func or function(ch) return tonumber(ch) end
+    conv_func = conv_func or function(ch) return ch end
 
     local w = 1
     local r = 0
