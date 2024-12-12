@@ -11,29 +11,27 @@ local ssplit = aoc.str_split
 local arreq = aoc.arr_eq
 
 local function check(map, queue, acc)
-    mayprint("CHECK")
     map:print()
 
     queue = queue or { pos { 1, 1 } }
     acc = acc or 0
 
     local first_region_pos = nil
-    for _, p in ipairs(queue) do
-        assert(map[p])
-        if map[p] and map[p] ~= "." then
+    while #queue > 0 do
+        local p = trem(queue)
+        if map[p] ~= "." then
             first_region_pos = p
             break
         end
     end
     if not first_region_pos then return acc end
 
-    local region_area, region_perimeter = 0, 0
+    local region_area = 0
     local region_queue = {[first_region_pos] = true}
     local region_seen = {}
 
     local this_pos = next(region_queue)
     while this_pos do
-        -- mayprint("LOOK AT: " .. tostring(this_pos))
         region_queue[this_pos] = nil
         region_seen[this_pos] = true
 
@@ -55,21 +53,18 @@ local function check(map, queue, acc)
 
             -- map end
             if not map[next_pos] then
-                region_perimeter = region_perimeter + 1
                 goto continue
             end
 
             next_plant = map[next_pos]
             -- same region
             if next_plant == this_plant then
-                -- mayprint("next region added: " .. tostring(next_pos))
                 region_queue[next_pos] = true
                 goto continue
             end
 
             -- other region
             if next_plant ~= this_plant then
-                region_perimeter = region_perimeter + 1
                 if next_plant ~= "." then
                     tins(queue, next_pos)
                 end
@@ -141,7 +136,6 @@ local function check(map, queue, acc)
         end
     end
 
-    mayprint("NEXT REGION")
     return check(map, queue, acc + region_area * side_count)
 end
 
@@ -283,10 +277,10 @@ MMMISSJEEE
     mayprint("DONE")
 end
 
--- do
---     local m = aoc.mappify(aoc.flines("input.txt"))
---     local price = check(m)
---     assert(price == 784982, price)
+do
+    local m = aoc.mappify(aoc.flines("input.txt"))
+    local price = check(m)
+    assert(price == 784982, price)
 
---     mayprint("DONE")
--- end
+    mayprint("DONE")
+end
