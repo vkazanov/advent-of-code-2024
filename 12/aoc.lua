@@ -89,10 +89,13 @@ end
 function Pos.__add(l, r) return aoc.pos(l.r + r.r, l.r + r.c) end
 function Pos.__tostring(p) return p.r .. "," .. p.c end
 
--- TODO: diagonal positions!
 function Pos:up() return aoc.pos(self.r - 1, self.c) end
+function Pos:up_left() return aoc.pos(self.r - 1, self.c - 1) end
+function Pos:up_right() return aoc.pos(self.r - 1, self.c + 1) end
 function Pos:right() return aoc.pos(self.r, self.c + 1) end
 function Pos:down() return aoc.pos(self.r + 1, self.c) end
+function Pos:down_left() return aoc.pos(self.r + 1, self.c - 1) end
+function Pos:down_right() return aoc.pos(self.r + 1, self.c + 1) end
 function Pos:left() return aoc.pos(self.r,  self.c - 1) end
 
 local Map = {}

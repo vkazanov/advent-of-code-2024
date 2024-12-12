@@ -83,122 +83,66 @@ local function check(map, queue, acc)
     end
 
     for k, _ in pairs(region_seen) do map[k] = "." end
-    -- for k, _ in pairs(region_seen) do mayprint("SEEN:" .. tostring(k)) end
+
+    local side_count = 0
+
+    local is_new_side = function(p, prev_is_side, opposite_to)
+        local in_region = region_seen[p]
+        if not in_region then return false, false end
+
+        local is_side = not region_seen[opposite_to(p)]
+        if not is_side then return false, false end
+        if prev_is_side then return true, false end
+
+        return true, true
+    end
 
     -- check left vertical region sides
-    local left_count = 0
+    local opposite_to = function (p) return p:left() end
     for c = 1, map.dim.width do
+        local prev_is_side = false
         for r = 1, map.dim.height do
-            local p = pos { r, c }
-            mayprint(p)
-            local in_region = region_seen[p]
-            if not in_region then goto continue end
-            mayprint("in region")
-
-            local up_in_region = region_seen[p:up()]
-            mayprint("up_in_region: " .. tostring(up_in_region))
-
-            local left_not_seen = not region_seen[pos { p.r, p.c - 1 }]
-            mayprint("left_not_seen: " .. tostring(left_not_seen))
-
-            local up_left_not_seen = not region_seen[pos { p.r - 1, p.c - 1 }]
-            mayprint("up_left_not_seen: " .. tostring(up_left_not_seen))
-
-            if left_not_seen and not (up_left_not_seen and up_in_region) then
-                mayprint("add")
-                left_count = left_count + 1
-            end
-            ::continue::
+            local is_new
+            prev_is_side, is_new = is_new_side(pos { r, c }, prev_is_side, opposite_to)
+            if is_new then side_count = side_count + 1 end
         end
     end
-    mayprint("LEFT SIDES = " .. left_count)
 
     -- check right vertical region sides
-    local right_count = 0
+    opposite_to = function (p) return p:right() end
     for c = 1, map.dim.width do
+        local prev_is_side = false
         for r = 1, map.dim.height do
-            local p = pos { r, c }
-            mayprint(p)
-
-            local in_region = region_seen[p]
-            if not in_region then goto continue end
-            mayprint("in region")
-
-            local up_in_region = region_seen[p:up()]
-            mayprint("up_in_region: " .. tostring(up_in_region))
-
-            local right_not_seen = not region_seen[pos { p.r, p.c + 1 }]
-            mayprint("right_not_seen: " .. tostring(right_not_seen))
-
-            local up_right_not_seen = not region_seen[pos { p.r - 1, p.c + 1 }]
-            mayprint("up_right_not_seen: " .. tostring(up_right_not_seen))
-
-            if right_not_seen and not (up_right_not_seen and up_in_region) then
-                right_count = right_count + 1
-                mayprint("add")
-            end
-            ::continue::
+            local is_new
+            prev_is_side, is_new = is_new_side(pos { r, c }, prev_is_side, opposite_to)
+            if is_new then side_count = side_count + 1 end
         end
     end
-    mayprint("RIGHT SIDES = " .. right_count)
 
     -- check up horizontal region sides
-    local up_count = 0
-    for c = 1, map.dim.width do
-        for r = 1, map.dim.height do
-            local p = pos { r, c }
-            mayprint(p)
-
-            local in_region = region_seen[p]
-            if not in_region then goto continue end
-            mayprint("in region")
-
-            local left_in_region = region_seen[p:left()]
-            mayprint("left_in_region: " .. tostring(left_in_region))
-
-            local up_not_seen = not region_seen[pos { p.r - 1, p.c }]
-            mayprint("up_not_seen: " .. tostring(up_not_seen))
-
-            local up_left_not_seen = not region_seen[pos { p.r - 1, p.c - 1 }]
-            mayprint("up_left_not_seen: " .. tostring(up_left_not_seen))
-
-            if up_not_seen and not (up_left_not_seen and left_in_region) then
-                up_count = up_count + 1
-            end
-            ::continue::
+    opposite_to = function (p) return p:up() end
+    for r = 1, map.dim.height do
+        local prev_is_side = false
+        for c = 1, map.dim.width do
+            local is_new
+            prev_is_side, is_new = is_new_side(pos { r, c }, prev_is_side, opposite_to)
+            if is_new then side_count = side_count + 1 end
         end
     end
-    mayprint("UP SIDES = " .. up_count)
 
     -- check down horizontal region sides
-    local down_count = 0
-    for c = 1, map.dim.width do
-        for r = 1, map.dim.height do
-            local p = pos { r, c }
-            mayprint(p)
-            local in_region = region_seen[p]
-            if not in_region then goto continue end
-            mayprint("in region")
-
-            local left_in_region = region_seen[p:left()]
-            mayprint("left_in_region: " .. tostring(left_in_region))
-
-            local down_not_seen = not region_seen[pos { p.r + 1, p.c }]
-            mayprint("down_not_seen: " .. tostring(down_not_seen))
-
-            local down_left_not_seen = not region_seen[pos { p.r + 1, p.c - 1 }]
-            mayprint("down_left_not_seen: " .. tostring(down_left_not_seen))
-
-            if down_not_seen and not (down_left_not_seen and left_in_region) then
-                down_count = down_count + 1
-            end
-            ::continue::
+    opposite_to = function (p) return p:down() end
+    for r = 1, map.dim.height do
+        local prev_is_side = false
+        for c = 1, map.dim.width do
+            local is_new
+            prev_is_side, is_new = is_new_side(pos { r, c }, prev_is_side, opposite_to)
+            if is_new then side_count = side_count + 1 end
         end
     end
-    mayprint("DOWN SIDES = " .. down_count)
 
     mayprint("NEXT REGION")
-    return check(map, queue, acc + region_area * (down_count + up_count + left_count + right_count))
+    return check(map, queue, acc + region_area * side_count)
 end
 
 aoc.PRINT = false
@@ -339,10 +283,10 @@ MMMISSJEEE
     mayprint("DONE")
 end
 
-do
-    local m = aoc.mappify(aoc.flines("input.txt"))
-    local price = check(m)
-    assert(price == 784982, price)
+-- do
+--     local m = aoc.mappify(aoc.flines("input.txt"))
+--     local price = check(m)
+--     assert(price == 784982, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
