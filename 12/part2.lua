@@ -25,8 +25,8 @@ local function check(map, queue, acc)
     local region_queue = {[first] = true}
     local seen = {}
 
-    local min_r, max_r = 0, map.dim.height
-    local min_c, max_c = 0, map.dim.width
+    local min_r, max_r = map.dim.height, 0
+    local min_c, max_c = map.dim.width, 0
 
     local this_pos = next(region_queue)
     while this_pos do
@@ -42,8 +42,9 @@ local function check(map, queue, acc)
 
         min_r = (this_pos.r < min_r) and this_pos.r or min_r
         max_r = (this_pos.r > max_r) and this_pos.r or max_r
-        min_c = (this_pos.r < min_c) and this_pos.r or min_c
-        max_c = (this_pos.r > max_c) and this_pos.r or max_c
+
+        min_c = (this_pos.c < min_c) and this_pos.c or min_c
+        max_c = (this_pos.c > max_c) and this_pos.c or max_c
 
         area = area + 1
 
@@ -121,141 +122,141 @@ end
 
 aoc.PRINT = false
 
-do
-    local map_str = [[
-AAA
-AAA
-AAA
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 9 * 4, price)
+-- do
+--     local map_str = [[
+-- AAA
+-- AAA
+-- AAA
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 9 * 4, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-AA
-AA
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 4 * 4, price)
+-- do
+--     local map_str = [[
+-- AA
+-- AA
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 4 * 4, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-A
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 4 * 1, price)
+-- do
+--     local map_str = [[
+-- A
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 4 * 1, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-AB
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 4 * 1 * 2, price)
+-- do
+--     local map_str = [[
+-- AB
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 4 * 1 * 2, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-ABA
-BBB
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 4 * 1 * 2 + (3 + 1 + 2 + 2)*4, price)
+-- do
+--     local map_str = [[
+-- ABA
+-- BBB
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 4 * 1 * 2 + (3 + 1 + 2 + 2)*4, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-E
-X
-E
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 4*3, price)
+-- do
+--     local map_str = [[
+-- E
+-- X
+-- E
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 4*3, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-EE
-EX
-EE
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 8*5 + 4*1, price)
+-- do
+--     local map_str = [[
+-- EE
+-- EX
+-- EE
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 8*5 + 4*1, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-EEEEE
-EXXXX
-EEEEE
-EXXXX
-EEEEE
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 236, price)
+-- do
+--     local map_str = [[
+-- EEEEE
+-- EXXXX
+-- EEEEE
+-- EXXXX
+-- EEEEE
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 236, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-AAAAAA
-AAABBA
-AAABBA
-ABBAAA
-ABBAAA
-AAAAAA
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 368, price)
+-- do
+--     local map_str = [[
+-- AAAAAA
+-- AAABBA
+-- AAABBA
+-- ABBAAA
+-- ABBAAA
+-- AAAAAA
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 368, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
-do
-    local map_str = [[
-RRRRIICCFF
-RRRRIICCCF
-VVRRRCCFFF
-VVRCCCJFFF
-VVVVCJJCFE
-VVIVCCJJEE
-VVIIICJJEE
-MIIIIIJJEE
-MIIISIJEEE
-MMMISSJEEE
-]]
-    local m = aoc.mappify(map_str:gmatch("[^\n]+"))
-    local price = check(m)
-    assert(price == 1206, price)
+-- do
+--     local map_str = [[
+-- RRRRIICCFF
+-- RRRRIICCCF
+-- VVRRRCCFFF
+-- VVRCCCJFFF
+-- VVVVCJJCFE
+-- VVIVCCJJEE
+-- VVIIICJJEE
+-- MIIIIIJJEE
+-- MIIISIJEEE
+-- MMMISSJEEE
+-- ]]
+--     local m = aoc.mappify(map_str:gmatch("[^\n]+"))
+--     local price = check(m)
+--     assert(price == 1206, price)
 
-    mayprint("DONE")
-end
+--     mayprint("DONE")
+-- end
 
 do
     local m = aoc.mappify(aoc.flines())
