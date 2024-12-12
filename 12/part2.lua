@@ -34,10 +34,11 @@ local function check(map, queue, acc)
         seen[this_pos] = true
 
         local this_plant = map[this_pos]
+        map[this_pos] = "."
+
         assert(this_plant)
         assert(this_plant ~= ".")
         assert(this_pos)
-
 
         min_r = (this_pos.r < min_r) and this_pos.r or min_r
         max_r = (this_pos.r > max_r) and this_pos.r or max_r
@@ -51,9 +52,7 @@ local function check(map, queue, acc)
             local next_plant
 
             -- seen region posn or not in the map
-            if seen[next_pos] or not map[next_pos] then
-                goto continue
-            end
+            if seen[next_pos] or not map[next_pos] then goto continue end
 
             -- same vs other region
             next_plant = map[next_pos]
@@ -65,8 +64,6 @@ local function check(map, queue, acc)
 
         this_pos = next(region_queue)
     end
-
-    for k, _ in pairs(seen) do map[k] = "." end
 
     local side_count = 0
 
@@ -261,7 +258,7 @@ MMMISSJEEE
 end
 
 do
-    local m = aoc.mappify(aoc.flines("input.txt"))
+    local m = aoc.mappify(aoc.flines())
     local price = check(m)
     assert(price == 784982, price)
 
