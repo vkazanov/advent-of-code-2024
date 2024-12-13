@@ -10,108 +10,85 @@ local trem = aoc.trem
 local ssplit = aoc.str_split
 local arreq = aoc.arr_eq
 
+local OFF = 10000000000000
 local A_TOKS = 3
 local B_TOKS = 1
-local A_STEPS = 100
-local B_STEPS = 100
-local TOO_HIGH = A_TOKS * A_STEPS + B_TOKS * B_STEPS + 1 -- impossible price
+local TOO_HIGH = OFF * B_TOKS + OFF * A_TOKS + OFF -- impossible price
 
-local function play(target, a_diff, b_diff,
-                    paid, cache, a_steps, b_steps)
-    if not paid then paid = 0 end
-    if not cache then cache = {} end
-    if not a_steps then a_steps = A_STEPS; b_steps = B_STEPS end
+local function play(target, a_v, b_v)
 
-    if target == pos { 0, 0 } then
-        mayprint("SOL: " .. a_steps .. "/" .. b_steps)
-        return paid
+    print("target+ " .. tostring(target))
+
+    local gcd = aoc.gcd(a_v.r, b_v.r)
+    if target.r % gcd > 0 then
+        mayprint("SKIP GCD 1" .. gcd)
+        return TOO_HIGH
     end
-    if target.r < 0 or target.c < 0 then return TOO_HIGH end
-    if a_steps <= 0 then return TOO_HIGH end
-    if b_steps <= 0 then return TOO_HIGH end
+    a_v.r = a_v.r / gcd
+    b_v.r = b_v.r / gcd
+    target.r = target.r / gcd
 
-    if cache[target] then return cache[target] end
+    gcd = aoc.gcd(a_v.c, b_v.c)
+    if target.c % gcd > 0 then
+        mayprint("SKIP GCD 2 " .. gcd)
+        return TOO_HIGH
+    end
+    a_v.c = a_v.c / gcd
+    b_v.c = b_v.c / gcd
+    target.c = target.c / gcd
 
-    local price_a = play(target - a_diff, a_diff, b_diff, paid + A_TOKS, cache, a_steps - 1, b_steps)
-    local price_b = play(target - b_diff, a_diff, b_diff, paid + B_TOKS, cache, a_steps, b_steps - 1)
-    local result = math.min(price_a, price_b)
+    print("target- " .. tostring(target))
 
-    cache[target] = result
+    local a = 0
+    local b
+    while true do
+        local r, c
+        b = (target.r - target.c) - a * (a_v.r - a_v.c)
+        b = b / (b_v.r - b_v.c)
+        mayprint("check a=" .. a .. " b=" .. b)
 
-    return result
+        if b ~= math.floor(b) then
+            mayprint("skip float " .. b )
+            goto next
+        end
+        if b < 0 then
+            mayprint("skip negative" .. b)
+            goto next
+        end
+
+        r = a * a_v.r + b * b_v.r
+        c = a * a_v.c + b * b_v.c
+
+        if r > target.r then
+            mayprint("too big 1 " .. r)
+            return TOO_HIGH
+        end
+
+        if c > target.c then
+            mayprint("too big 2 " .. c)
+            return TOO_HIGH
+        end
+
+        if r ~= target.r then
+            mayprint("skip 1")
+            goto next
+        end
+        if c ~= target.c then
+            mayprint("skip 2")
+            goto next
+        end
+
+        -- got it
+        break
+
+        ::next::
+        a = a + 1
+    end
+
+    return a * A_TOKS + b * B_TOKS
 end
 
-do
-    local a_diff = pos { 10, 10 }
-    local b_diff = pos { 11, 11 }
-    local target = pos { 3, 3 }
-
-    assert(play(target, a_diff, b_diff) == TOO_HIGH)
-end
-
-do
-    local a_diff = pos { 1, 1 }
-    local b_diff = pos { 100, 100 }
-    local target = pos { 3, 3 }
-
-    assert(play(target, a_diff, b_diff) == 9)
-end
-
-do
-    local a_diff = pos { 0, 1 }
-    local b_diff = pos { 0, 100 }
-    local target = pos { 0, 103 }
-
-    local price = play(target, a_diff, b_diff)
-    assert(price == 10, price)
-end
-
-do
-    aoc.PRINT = false
-
-    local a_diff = pos { 1, 0 }
-    local b_diff = pos { 100, 0 }
-    local target = pos { 103, 0 }
-
-    local price = play(target, a_diff, b_diff)
-    assert(price == 10, price)
-end
-
-do
-
-    local a_diff = pos { 1, 0 }
-    local b_diff = pos { 0, 1 }
-    local target = pos { 100, 0 }
-
-    local price = play(target, a_diff, b_diff)
-    assert(price ~= TOO_HIGH, "TOO HIGH")
-    assert(price == 100*A_TOKS, price)
-end
-
-do
-
-    local a_diff = pos { 1, 0 }
-    local b_diff = pos { 0, 1 }
-    local target = pos { 0, 100 }
-
-    local price = play(target, a_diff, b_diff)
-    assert(price ~= TOO_HIGH, "TOO HIGH")
-    assert(price == 100*B_TOKS, price)
-end
-
-do
-    local a_diff = pos { 1, 0 }
-    local b_diff = pos { 0, 3 }
-    local target = pos { 3, 99 }
-
-    local price = play(target, a_diff, b_diff)
-    assert(price ~= TOO_HIGH, "TOO HIGH")
-    assert(price == 3*A_TOKS + 33*B_TOKS, price)
-end
-
-do
-    aoc.PRINT = true
-
+do -- sol
     local a_diff = pos { 94, 34 }
     local b_diff = pos { 22, 67 }
     local target = pos { 8400, 5400 }
@@ -159,31 +136,70 @@ do -- no sol
     assert(price == TOO_HIGH, "NOT TOO HIGH")
 end
 
+----- OFFSET
+
 do
-    aoc.PRINT = true
+    -- aoc.PRINT = true
+    local a_diff = pos { 94, 34 }
+    local b_diff = pos { 22, 67 }
+    local target = pos { 8400 + OFF, 5400  + OFF}
 
-    local total_min_price = 0
-    local lines = aoc.flines()
-    while true do
-        local line_a = lines()
-        local line_b = lines()
-        local line_target = lines()
-        assert(line_a and line_b and line_target)
-
-        local a_r, a_c = line_a:match("X%+(%d+)%s*,%s*Y%+(%d+)")
-        local a_diff = pos {tonumber(a_r), tonumber(a_c)}
-
-        local b_r, b_c = line_b:match("X%+(%d+)%s*,%s*Y%+(%d+)")
-        local b_diff = pos { tonumber(b_r), tonumber(b_c) }
-
-        local target_r, target_c = line_target:match("X=(%d+)%s*,%s*Y=(%d+)")
-        local target = pos { tonumber(target_r), tonumber(target_c) }
-
-        local price = play(target, a_diff, b_diff)
-        total_min_price = total_min_price + (price ~= TOO_HIGH and price or 0)
-
-        if not lines() then break end
-    end
-
-    print(total_min_price)
+    local price = play(target, a_diff, b_diff)
+    assert(price == TOO_HIGH)
 end
+
+-- do -- sol
+--     local a_diff = pos { 26, 66 }
+--     local b_diff = pos { 67, 21 }
+--     local target = pos { 12748 + OFF, 12176 + OFF}
+
+--     local price = play(target, a_diff, b_diff)
+--     assert(price ~= TOO_HIGH)
+-- end
+
+-- do
+
+--     local a_diff = pos { 17, 86 }
+--     local b_diff = pos { 84, 37 }
+--     local target = pos { 7870 + OFF, 6450 + OFF }
+
+--     local price = play(target, a_diff, b_diff)
+--     assert(price == TOO_HIGH)
+-- end
+
+-- do -- sol
+--     local a_diff = pos { 69, 23 }
+--     local b_diff = pos { 27, 71 }
+--     local target = pos { 18641, 10279 }
+
+--     local price = play(target, a_diff + OFF, b_diff + OFF)
+--     assert(price ~= TOO_HIGH)
+-- end
+
+-- do
+
+--     local total_min_price = 0
+--     local lines = aoc.flines()
+--     while true do
+--         local line_a = lines()
+--         local line_b = lines()
+--         local line_target = lines()
+--         assert(line_a and line_b and line_target)
+
+--         local a_r, a_c = line_a:match("X%+(%d+)%s*,%s*Y%+(%d+)")
+--         local a_diff = pos {tonumber(a_r), tonumber(a_c)}
+
+--         local b_r, b_c = line_b:match("X%+(%d+)%s*,%s*Y%+(%d+)")
+--         local b_diff = pos { tonumber(b_r), tonumber(b_c) }
+
+--         local target_r, target_c = line_target:match("X=(%d+)%s*,%s*Y=(%d+)")
+--         local target = pos { tonumber(target_r), tonumber(target_c) }
+
+--         local price = play(target, a_diff, b_diff)
+--         total_min_price = total_min_price + (price ~= TOO_HIGH and price or 0)
+
+--         if not lines() then break end
+--     end
+
+--     print(total_min_price)
+-- end

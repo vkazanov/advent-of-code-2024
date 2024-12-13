@@ -68,6 +68,13 @@ function aoc.foldl(f, acc, list)
   return acc
 end
 
+function aoc.gcd(a, b)
+    while b ~= 0 do
+        a, b = b, a % b
+    end
+    return a
+end
+
 local poss = setmetatable({}, { __mode = "v" })
 local Pos = {}
 
