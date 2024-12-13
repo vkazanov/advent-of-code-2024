@@ -109,7 +109,7 @@ do
     assert(price == 3*A_TOKS + 33*B_TOKS, price)
 end
 
-do
+do -- sol
     aoc.PRINT = true
 
     local a_diff = pos { 94, 34 }
@@ -185,5 +185,5 @@ do
         if not lines() then break end
     end
 
-    print(total_min_price)
+    assert(total_min_price == 39996)
 end
