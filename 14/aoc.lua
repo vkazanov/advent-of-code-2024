@@ -75,38 +75,39 @@ function aoc.gcd(a, b)
     return a
 end
 
-local poss = setmetatable({}, { __mode = "v" })
-local Pos = {}
+local vecs = setmetatable({}, { __mode = "v" })
+local Vec = {}
 
-function aoc.pos(r, c)
-    if type(r) == "table" then
-        c = r[2]
-        r = r[1]
-    else
-        assert(type(r) == type(c))
-    end
+function aoc.vec(x, y)
+    if type(x) == "table" then assert(not y); local t = x; x, y = t[1], t[2]
+    else assert(type(x) == type(y) and x and y) end
 
-    local key = r .. "," .. c
-    local found = poss[key]
+    local key = x .. "," .. y
+    local found = vecs[key]
     if found then return found end
-    local p = setmetatable({ r = r, c = c }, Pos)
-    poss[key] = p
-    Pos.__index = Pos
-    return p
+
+    local v = setmetatable({ x = x, y = y }, Vec)
+    Vec.__index = Vec
+    vecs[key] = v
+    return v
 end
 
-function Pos.__add(left, right) return aoc.pos(left.r + right.r, left.c + right.c) end
-function Pos.__sub(left, right) return aoc.pos(left.r - right.r, left.c - right.c) end
-function Pos.__tostring(p) return p.r .. "," .. p.c end
+function Vec.__add(left, right) return aoc.vec(left.x + right.x, left.y + right.y) end
+function Vec.__sub(left, right) return aoc.vec(left.x - right.x, left.y - right.y) end
+function Vec.__eq(left, right) return (left.y == right.y) and (left.x == right.x) end
+function Vec.__tostring(p) return p.x .. "," .. p.y end
 
-function Pos:up() return aoc.pos(self.r - 1, self.c) end
-function Pos:up_left() return aoc.pos(self.r - 1, self.c - 1) end
-function Pos:up_right() return aoc.pos(self.r - 1, self.c + 1) end
-function Pos:right() return aoc.pos(self.r, self.c + 1) end
-function Pos:down() return aoc.pos(self.r + 1, self.c) end
-function Pos:down_left() return aoc.pos(self.r + 1, self.c - 1) end
-function Pos:down_right() return aoc.pos(self.r + 1, self.c + 1) end
-function Pos:left() return aoc.pos(self.r,  self.c - 1) end
+function Vec:wrap(dim) return aoc.vec{self.x % dim.x, self.y % dim.y} end
+function Vec:times(times) return aoc.vec(self.x * times, self.y * times) end
+
+function Vec:up() return aoc.vec(self.x, self.y - 1) end
+function Vec:up_left() return aoc.vec(self.x - 1, self.y - 1) end
+function Vec:up_right() return aoc.vec(self.x + 1, self.y - 1) end
+function Vec:right() return aoc.vec(self.x + 1, self.y) end
+function Vec:down() return aoc.vec(self.x, self.y + 1) end
+function Vec:down_left() return aoc.vec(self.x - 1, self.y + 1) end
+function Vec:down_right() return aoc.vec(self.x + 1, self.y + 1) end
+function Vec:left() return aoc.vec(self.x - 1, self.y) end
 
 local Map = {}
 
