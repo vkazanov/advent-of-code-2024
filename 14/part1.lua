@@ -3,7 +3,6 @@ local aoc = require "aoc"
 aoc.PRINT = false
 local mayprint = aoc.mayprint
 
--- TODO: rename positions into vectors
 local vec = aoc.vec
 local tins = aoc.tins
 local tcon = aoc.tcon
