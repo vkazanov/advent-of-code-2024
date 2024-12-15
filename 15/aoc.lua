@@ -12,6 +12,12 @@ function aoc.mayprint(...)
     end
 end
 
+function aoc.sleep (a)
+    local sec = tonumber(os.clock() + a);
+    while (os.clock() < sec) do
+    end
+end
+
 function aoc.fline(fname)
     fname = fname or "input.txt"
     local f <close> = io.open(fname, "r")
@@ -100,29 +106,44 @@ function Vec.__tostring(p) return p.x .. "," .. p.y end
 function Vec:wrap(dim) return aoc.vec{self.x % dim.x, self.y % dim.y} end
 function Vec:times(times) return aoc.vec(self.x * times, self.y * times) end
 
-function Vec:up() return aoc.vec(self.x, self.y - 1) end
+aoc.LEFT = aoc.vec{-1, 0}
+aoc.RIGHT = aoc.vec{1, 0}
+aoc.UP = aoc.vec{0, -1}
+aoc.DOWN = aoc.vec{0, 1}
+
+function Vec:up() return self + aoc.UP end
 function Vec:up_left() return aoc.vec(self.x - 1, self.y - 1) end
 function Vec:up_right() return aoc.vec(self.x + 1, self.y - 1) end
-function Vec:right() return aoc.vec(self.x + 1, self.y) end
-function Vec:down() return aoc.vec(self.x, self.y + 1) end
+function Vec:right() return self + aoc.RIGHT end
+function Vec:down() return self + aoc.DOWN end
 function Vec:down_left() return aoc.vec(self.x - 1, self.y + 1) end
 function Vec:down_right() return aoc.vec(self.x + 1, self.y + 1) end
-function Vec:left() return aoc.vec(self.x - 1, self.y) end
+function Vec:left() return self + aoc.LEFT end
 
 local Map = {}
 
 function Map:print(conv_func)
     if not aoc.PRINT then return end
 
-    conv_func = conv_func or function(ch) return ch end
+    conv_func = conv_func or function(ch, _, _) return ch end
 
-    for r2 = 1, self.dim.height do
-        for c2 = 1, self.dim.width do
-            local ch = self[aoc.pos(r2, c2)]
-            ch = conv_func(ch)
+    for y = 0, self.dim.height - 1 do
+        for x = 0, self.dim.width - 1 do
+            local ch = self[aoc.vec{x, y}]
+            ch = conv_func(ch, x, y)
             io.write(ch)
         end
         io.write("\n")
+    end
+end
+
+function Map:apply(func)
+    assert(func)
+
+    for y = 0, self.dim.height - 1 do
+        for x = 0, self.dim.width - 1 do
+            func(aoc.vec{x, y}, self[aoc.vec{x, y}])
+        end
     end
 end
 
@@ -130,21 +151,22 @@ function aoc.mappify(lines, conv_func)
     local map = setmetatable({}, Map)
     Map.__index = Map
 
-    conv_func = conv_func or function(ch) return ch end
+    conv_func = conv_func or function(ch, _, _) return ch end
 
-    local w = 1
-    local r = 0
+    local w, h = 0, 0
 
+    local y = 0
     for line in lines do
-        r = r + 1
-        local c = 0
+        local x = 0
         for ch in line:gmatch(".") do
-            c = c + 1
-            map[aoc.pos(r, c)] = conv_func(ch)
+            map[aoc.vec{x, y}] = conv_func(ch, x, y)
+            x = x + 1
+            w = math.max(w, x)
         end
-        w = math.max(w, c)
+        y = y + 1
+        h = math.max(h, y)
     end
-    map.dim = { width = w, height = r }
+    map.dim = { width = w, height = h }
 
     return map
 end
