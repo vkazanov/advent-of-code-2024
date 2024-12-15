@@ -109,5 +109,5 @@ do
         return
     end)
 
-    print(result)
+    assert(result == 1516281)
 end
