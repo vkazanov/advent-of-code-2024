@@ -4,6 +4,7 @@ aoc.tins = table.insert
 aoc.tcon = table.concat
 aoc.trem = table.remove
 aoc.tmov = table.move
+aoc.tunp = table.unpack
 
 aoc.PRINT = true
 function aoc.mayprint(...)
@@ -111,6 +112,23 @@ aoc.RIGHT = aoc.vec{1, 0}
 aoc.UP = aoc.vec{0, -1}
 aoc.DOWN = aoc.vec{0, 1}
 
+aoc.dir_to_rot_clock = {
+    [aoc.LEFT] = aoc.UP,
+    [aoc.RIGHT] = aoc.DOWN,
+    [aoc.UP] = aoc.RIGHT,
+    [aoc.DOWN] = aoc.LEFT,
+}
+
+aoc.dir_to_rot_counter = {
+    [aoc.LEFT] = aoc.DOWN,
+    [aoc.RIGHT] = aoc.UP,
+    [aoc.UP] = aoc.LEFT,
+    [aoc.DOWN] = aoc.RIGHT,
+}
+
+function Vec:rot_clock() return aoc.dir_to_rot_clock[self] end
+function Vec:rot_counter() return aoc.dir_to_rot_counter[self] end
+
 function Vec:up() return self + aoc.UP end
 function Vec:up_left() return aoc.vec(self.x - 1, self.y - 1) end
 function Vec:up_right() return aoc.vec(self.x + 1, self.y - 1) end
@@ -151,7 +169,7 @@ function aoc.mappify(lines, conv_func)
     local map = setmetatable({}, Map)
     Map.__index = Map
 
-    conv_func = conv_func or function(ch, _, _) return ch end
+    conv_func = conv_func or function(ch, _) return ch end
 
     local w, h = 0, 0
 
@@ -159,7 +177,7 @@ function aoc.mappify(lines, conv_func)
     for line in lines do
         local x = 0
         for ch in line:gmatch(".") do
-            map[aoc.vec{x, y}] = conv_func(ch, x, y)
+            map[aoc.vec{x, y}] = conv_func(ch, aoc.vec{x, y})
             x = x + 1
             w = math.max(w, x)
         end
