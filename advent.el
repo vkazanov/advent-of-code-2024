@@ -39,6 +39,9 @@
   (file-name-concat (expand-file-name advent-dir) "aoc.lua")
   "A template for the util code.")
 
+(defvar advent-submit-level-history nil
+  "History of level submission.")
+
 (defun advent-login (session)
   "Login to Advent of Code.
 Argument SESSION - session cookie to use."
@@ -61,8 +64,8 @@ Optional argument DAY Load this day instead.  Defaults to today."
 
 (defun advent-submit (answer level &optional day)
   "Submits ANSWER for LEVEL to todays adventofcode.com problem.
-Argument LEVEL is either 1 or 2.
-Optional argument DAY is the day to submit for.  Defaults to today."
+LEVEL - either 1 or 2.
+DAY - day to submit (Defaults to today)."
   (interactive
    (list
     ;; answer
@@ -74,7 +77,9 @@ Optional argument DAY is the day to submit for.  Defaults to today."
         (t "Submit: "))
        nil nil answer-default))
     ;; level
-    (read-string "Level (1 or 2): ")))
+    (let ((default-level (or (car advent-submit-level-history) "1")))
+      (read-string (format "Level (%s): " default-level)
+                   nil 'advent-submit-level-history default-level))))
   (let* ((year (format-time-string "%Y"))
          (day (or day (advent--day)))
          (url (format "https://adventofcode.com/%s/day/%d/answer" year day))
@@ -84,8 +89,8 @@ Optional argument DAY is the day to submit for.  Defaults to today."
     (eww-browse-url url)))
 
 (defun advent-src (&optional day)
-  "Open a file for DAY. If non-existant, use 'advent-file-template'
-to create one."
+  "Open a file for DAY.
+If non-existant, use `advent-file-template' to create one."
   (interactive "P")
   (let* ((day (format "%d" (or day (advent--day))))
          (dir (file-name-concat (expand-file-name advent-dir) day))
@@ -112,6 +117,8 @@ Optional argument DAY Load this day instead.  Defaults to today."
       (find-file-other-window file))))
 
 (defun advent--download-callback (status file)
+  "Save the results retrieved to a specified FILE.
+STATUS - request status."
   (if (plist-get status :error)
       (message "Failed to download todays advent %s" (plist-get status :error))
     (mkdir (file-name-directory file) t)
@@ -121,6 +128,7 @@ Optional argument DAY Load this day instead.  Defaults to today."
     (find-file-other-window file)))
 
 (defun advent--day ()
+  "Return current day as a number based on the correct time zone."
   (elt (decode-time (current-time) "America/New_York") 3))
 
 (defun advent--default-answer ()
