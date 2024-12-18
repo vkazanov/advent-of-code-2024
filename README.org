@@ -10,3 +10,5 @@
 
  - https://mmhaskell.com/blog/2023/1/30/advent-of-code-fetching-puzzle-input-using-the-api -
    fetching inputs in Haskell
+
+ - https://github.com/keegancsmith/advent/ - a starting point for utils in [[file:advent.el][advent.el]]
