@@ -149,6 +149,12 @@ function Vec:left() return self + aoc.LEFT end
 
 local Map = {}
 
+function Map:in_bounds(pos)
+    if pos.x < 0 or pos.x >= self.dim.width then return false end
+    if pos.y < 0 or pos.y >= self.dim.height then return false end
+    return true
+end
+
 function Map:print(conv_func)
     -- if not aoc.PRINT then return end
 

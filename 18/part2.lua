@@ -12,7 +12,6 @@ local tunp = aoc.tunp
 local ssplit = aoc.str_split
 local arreq = aoc.arr_eq
 
-
 local spos, m, epos
 
 spos = vec { 0, 0 }
@@ -42,8 +41,7 @@ local function find_path(map, sp, ep)
         if p == ep then return s, pos2prev end
 
         for _, next_p in pairs { p:left(), p:right(), p:up(), p:down() } do
-            if next_p.x < 0 or next_p.x >= map.dim.width then goto continue end
-            if next_p.y < 0 or next_p.y >= map.dim.height then goto continue end
+            if not map:in_bounds(next_p) then goto continue end
             if map[next_p] ~= "." then goto continue end
             if not pos2prev[next_p] then
                 pos2prev[next_p] = p
@@ -57,7 +55,6 @@ end
 
 local function mark(map, p, sp, pos2prev)
     while true do
-        print(p)
         map[p] = "X"
         local prev_p = pos2prev[p]; assert(prev_p)
         if p == sp then break end
@@ -72,23 +69,12 @@ end
 local s, pos2prev = find_path(m, spos, epos)
 mark(m, epos, spos, pos2prev)
 for _, c in ipairs(corrupted) do
-    if m[c] ~= "X" then
-        m[c] = "#"
-        goto continue
-    end
-    if m[c] == "X" then
-        m[c] = "#"
-        reset(m)
-        s, pos2prev = find_path(m, spos, epos)
-        if not s then
-            print(c)
-            break
-        end
-        mark(m, epos, spos, pos2prev)
-        goto continue
-    end
+    if m[c] ~= "X" then m[c] = "#"; goto continue end
+    m[c] = "#"
+    reset(m)
+    s, pos2prev = find_path(m, spos, epos)
+    if not s then print("res: ", c); break end
+    mark(m, epos, spos, pos2prev)
 
     ::continue::
 end
-
-m:print()
