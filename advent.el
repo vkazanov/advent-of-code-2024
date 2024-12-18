@@ -32,7 +32,7 @@
   "The directory you are doing advent of code in.")
 
 (defvar advent-file-template
-  (file-name-concat (expand-file-name advent-dir) "part1.lua.template")
+  (file-name-concat (expand-file-name advent-dir) "template.lua")
   "A template for the first source of the day.")
 
 (defvar advent-lib-template
@@ -94,14 +94,15 @@ If non-existant, use `advent-file-template' to create one."
   (interactive "P")
   (let* ((day (format "%d" (or day (advent--day))))
          (dir (file-name-concat (expand-file-name advent-dir) day))
-         (bname (file-name-base advent-file-template))
-         (file (file-name-concat dir bname)))
-    (when (and (not (file-exists-p file))
+         (file1 (file-name-concat dir "part1.lua"))
+         (file2 (file-name-concat dir "part2.lua")))
+    (when (and (not (file-exists-p file1))
                (file-exists-p advent-file-template))
       (mkdir dir t)
-      (copy-file advent-file-template file)
+      (copy-file advent-file-template file1)
+      (copy-file advent-file-template file2)
       (copy-file advent-lib-template (concat dir "/")))
-    (find-file file)))
+    (find-file file1)))
 
 (defun advent-input (&optional day)
   "Load adventofcode.com daily input.txt in other window.
