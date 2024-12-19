@@ -1,10 +1,10 @@
 local aoc = {}
 
-aoc.tins = table.insert
-aoc.tcon = table.concat
-aoc.trem = table.remove
-aoc.tmov = table.move
-aoc.tunp = table.unpack
+local tins = table.insert
+local tcon = table.concat
+local trem = table.remove
+local tmov = table.move
+local tunp = table.unpack
 
 aoc.PRINT = true
 function aoc.mayprint(...)
@@ -35,7 +35,7 @@ function aoc.str_split(str, conv, pattern)
     if not conv then conv = tonumber; pattern = "%d+" end
 
     local elements = {}
-    for e in str:gmatch(pattern) do aoc.tins(elements, conv(e)) end
+    for e in str:gmatch(pattern) do tins(elements, conv(e)) end
 
     return elements
 end
@@ -83,10 +83,14 @@ function aoc.gcd(a, b)
     return a
 end
 
+-- let's make sure vectors with the same coords are the same objects. This makes it
+-- possible to use them as object keys
+--
 local vecs = setmetatable({}, { __mode = "v" })
+
 local Vec = {}
 
-function aoc.vec(x, y)
+function aoc.Vec(x, y)
     if type(x) == "table" then assert(not y); local t = x; x, y = t[1], t[2]
     else assert(type(x) == type(y) and x and y) end
 
@@ -100,18 +104,18 @@ function aoc.vec(x, y)
     return v
 end
 
-function Vec.__add(left, right) return aoc.vec(left.x + right.x, left.y + right.y) end
-function Vec.__sub(left, right) return aoc.vec(left.x - right.x, left.y - right.y) end
+function Vec.__add(left, right) return aoc.Vec(left.x + right.x, left.y + right.y) end
+function Vec.__sub(left, right) return aoc.Vec(left.x - right.x, left.y - right.y) end
 function Vec.__eq(left, right) return (left.y == right.y) and (left.x == right.x) end
 function Vec.__tostring(p) return p.x .. "," .. p.y end
 
-function Vec:wrap(dim) return aoc.vec{self.x % dim.x, self.y % dim.y} end
-function Vec:times(times) return aoc.vec(self.x * times, self.y * times) end
+function Vec:wrap(dim) return aoc.Vec{self.x % dim.x, self.y % dim.y} end
+function Vec:times(times) return aoc.Vec(self.x * times, self.y * times) end
 
-aoc.LEFT = aoc.vec{-1, 0}
-aoc.RIGHT = aoc.vec{1, 0}
-aoc.UP = aoc.vec{0, -1}
-aoc.DOWN = aoc.vec{0, 1}
+aoc.LEFT = aoc.Vec{-1, 0}
+aoc.RIGHT = aoc.Vec{1, 0}
+aoc.UP = aoc.Vec{0, -1}
+aoc.DOWN = aoc.Vec{0, 1}
 
 aoc.dir_to_rot_clock = {
     [aoc.LEFT] = aoc.UP,
@@ -139,12 +143,12 @@ function Vec:rot_counter() return aoc.dir_to_rot_counter[self] end
 function Vec:reverse() return aoc.dir_to_rev[self] end
 
 function Vec:up() return self + aoc.UP end
-function Vec:up_left() return aoc.vec(self.x - 1, self.y - 1) end
-function Vec:up_right() return aoc.vec(self.x + 1, self.y - 1) end
+function Vec:up_left() return aoc.Vec(self.x - 1, self.y - 1) end
+function Vec:up_right() return aoc.Vec(self.x + 1, self.y - 1) end
 function Vec:right() return self + aoc.RIGHT end
 function Vec:down() return self + aoc.DOWN end
-function Vec:down_left() return aoc.vec(self.x - 1, self.y + 1) end
-function Vec:down_right() return aoc.vec(self.x + 1, self.y + 1) end
+function Vec:down_left() return aoc.Vec(self.x - 1, self.y + 1) end
+function Vec:down_right() return aoc.Vec(self.x + 1, self.y + 1) end
 function Vec:left() return self + aoc.LEFT end
 
 local Map = {}
@@ -162,7 +166,7 @@ function Map:print(conv_func)
 
     for y = 0, self.dim.height - 1 do
         for x = 0, self.dim.width - 1 do
-            local ch = self[aoc.vec{x, y}]
+            local ch = self[aoc.Vec{x, y}]
             ch = conv_func(ch, x, y)
             io.write(ch)
         end
@@ -175,7 +179,7 @@ function Map:apply(func)
 
     for y = 0, self.dim.height - 1 do
         for x = 0, self.dim.width - 1 do
-            func(aoc.vec{x, y}, self[aoc.vec{x, y}])
+            func(aoc.Vec{x, y}, self[aoc.Vec{x, y}])
         end
     end
 end
@@ -186,7 +190,7 @@ function aoc.empty_map(max_pos)
 
     for x = 0, max_pos.x do
         for y = 0, max_pos.y do
-            map[aoc.vec{x, y}] = "."
+            map[aoc.Vec{x, y}] = "."
         end
     end
 
@@ -206,7 +210,7 @@ function aoc.mappify_lines(lines, conv_func)
     for line in lines do
         local x = 0
         for ch in line:gmatch(".") do
-            map[aoc.vec{x, y}] = conv_func(ch, aoc.vec{x, y})
+            map[aoc.Vec{x, y}] = conv_func(ch, aoc.Vec{x, y})
             x = x + 1
             w = math.max(w, x)
         end
@@ -229,7 +233,7 @@ function aoc.mappify_double(lines, conv_func)
     for line in lines do
         local x = 0
         for ch in line:gmatch(".") do
-            map[aoc.vec{x, y}], map[aoc.vec{x + 1, y}] = conv_func(ch, x, y)
+            map[aoc.Vec{x, y}], map[aoc.Vec{x + 1, y}] = conv_func(ch, x, y)
             x = x + 2
             w = math.max(w, x)
         end
