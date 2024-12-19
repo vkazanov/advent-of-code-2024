@@ -30,9 +30,7 @@ local function count(s, tr, cache)
     return res
 end
 
-local Trie = {
-
-}
+local Trie = {}
 Trie.__index = Trie
 function Trie.new()
     return setmetatable({

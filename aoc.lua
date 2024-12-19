@@ -6,6 +6,8 @@ local trem = table.remove
 local tmov = table.move
 local tunp = table.unpack
 
+ -- Generic utils
+
 aoc.PRINT = true
 function aoc.mayprint(...)
     if aoc.PRINT then
@@ -83,6 +85,8 @@ function aoc.gcd(a, b)
     return a
 end
 
+ -- Vector class
+
 -- let's make sure vectors with the same coords are the same objects. This makes it
 -- possible to use them as object keys
 --
@@ -151,8 +155,52 @@ function Vec:down_left() return aoc.Vec(self.x - 1, self.y + 1) end
 function Vec:down_right() return aoc.Vec(self.x + 1, self.y + 1) end
 function Vec:left() return self + aoc.LEFT end
 
-local Map = {}
+ -- Trie class
 
+local Trie = {}
+Trie.__index = Trie
+
+function aoc.Trie()
+    return setmetatable({
+            branches={},
+            is_leaf=false
+    }, Trie)
+end
+
+function Trie:insert(str)
+    if str == "" then
+        self.is_leaf = true; return
+    end
+
+    local ch = str:sub(1, 1)
+    local next_t = self.branches[ch]
+    if not next_t then
+        next_t = Trie.new()
+        self.branches[ch] = next_t
+    end
+
+    next_t:insert(str:sub(2))
+end
+
+function Trie:prefix_lengths_of(str)
+    local t, i = self, 1
+
+    local function prefix_len_iter()
+        while true do
+            if not t then return nil end
+            local has_found_leaf = t.is_leaf
+            t = t.branches[str:sub(i, i)]
+            i = i + 1
+            if has_found_leaf then return i - 2 end
+        end
+    end
+
+    return prefix_len_iter
+end
+
+ -- Map
+
+local Map = {}
 function Map:in_bounds(pos)
     if pos.x < 0 or pos.x >= self.dim.width then return false end
     if pos.y < 0 or pos.y >= self.dim.height then return false end
@@ -244,5 +292,7 @@ function aoc.mappify_double(lines, conv_func)
 
     return map
 end
+
+ -- end of the module
 
 return aoc
