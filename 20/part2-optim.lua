@@ -14,15 +14,17 @@ local tcon = table.concat
 local trem = table.remove
 local tunp = table.unpack
 local tpck = table.pack
+local tsrt = table.sort
 
 
-local function find(m, sp, ep)
-    local pos2prev = {}
+local function walk(m, sp, ep)
     local pos2time = {}
+    local time2pos = {}
 
     local p = sp
-    local s = 0
-    pos2time[sp] = 0
+    local t = 0
+    pos2time[sp] = t
+    time2pos[t] = p
     while true do
         if p == ep then break end
 
@@ -30,39 +32,36 @@ local function find(m, sp, ep)
             if m[next_p] ~= "." then goto continue end
             if pos2time[next_p] then goto continue end
 
-            pos2prev[next_p] = p
-            local next_s = s + 1
-            pos2time[next_p] = next_s
+            local next_t = t + 1
+            pos2time[next_p] = next_t
+            time2pos[next_t] = next_p
             p = next_p
-            s = next_s
+            t = next_t
             break
 
             ::continue::
         end
     end
 
-    return pos2prev, pos2time
+    return pos2time, time2pos
 end
 
-local function count(ep, p2p, p2t)
-    local p = ep
+local function count(p2t, t2p, epos)
     local cnt = 0
-    local path_to_end = {}
-    repeat
-        for _, cheat_p in pairs(path_to_end) do
-            assert(p2t[cheat_p])
-
-            local dist = math.abs(p.x - cheat_p.x) + math.abs(p.y - cheat_p.y)
+    for p1, t1 in pairs(p2t) do
+        local p2 = epos
+        local t2 = p2t[p2]
+        while t2 - t1 >= 100 do
+            local time_saved
+            local dist = math.abs(p1.x - p2.x) + math.abs(p1.y - p2.y)
             if dist > 20 then goto continue end
-
-            local time_saved = p2t[cheat_p] - p2t[p] - dist
+            time_saved = t2 - t1 - dist
             if time_saved >= 100 then cnt = cnt + 1 end
-
             ::continue::
+            t2 = t2 - 1
+            p2 = t2p[t2]
         end
-        tins(path_to_end, p)
-        p = p2p[p]
-    until not p
+    end
     return cnt
 end
 
@@ -79,6 +78,6 @@ local map = aoc.mappify_lines(
     end
 )
 
-local pos2prev, pos2time = find(map, spos, epos)
-local cnt = count(epos, pos2prev, pos2time)
+local pos2time, time2pos = walk(map, spos, epos)
+local cnt = count(pos2time, time2pos, epos)
 assert(cnt == 1021490)

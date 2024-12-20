@@ -12,5 +12,6 @@ local tcon = table.concat
 local trem = table.remove
 local tunp = table.unpack
 local tpck = table.pack
+local tsrt = table.sort
 
 -- TODO: go for it!
