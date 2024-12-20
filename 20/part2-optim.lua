@@ -54,11 +54,15 @@ local function count(p2t, t2p, epos)
         while t2 - t1 >= 100 do
             local time_saved
             local dist = math.abs(p1.x - p2.x) + math.abs(p1.y - p2.y)
-            if dist > 20 then goto continue end
+            local skip = 1
+            if dist > 20 then
+                skip = dist - 20
+                goto continue
+            end
             time_saved = t2 - t1 - dist
             if time_saved >= 100 then cnt = cnt + 1 end
             ::continue::
-            t2 = t2 - 1
+            t2 = t2 - skip
             p2 = t2p[t2]
         end
     end
