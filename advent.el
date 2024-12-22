@@ -56,11 +56,10 @@ Optional argument DAY Load this day instead.  Defaults to today."
   (let ((year (format-time-string "%Y"))
         (day (or day (advent--day))))
     (delete-other-windows)
-    (split-window-right)
     (eww (format "https://adventofcode.com/%s/day/%d" year day))
+    (advent-src day)
     (advent-input day)
-    (split-window-below)
-    (advent-src day)))
+    (switch-to-buffer "*eww*")))
 
 (defun advent-submit (answer level &optional day)
   "Submits ANSWER for LEVEL to todays adventofcode.com problem.
