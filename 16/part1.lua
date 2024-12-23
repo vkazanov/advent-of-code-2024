@@ -115,5 +115,5 @@ end
 
 do
     -- aoc.PRINT = true
-    print(find_score(aoc.flines()))
+    assert(find_score(aoc.flines()) == 95444)
 end
