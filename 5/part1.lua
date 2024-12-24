@@ -36,14 +36,12 @@ local function fix(rules, update)
         for j, that in pairs(fixed_update) do
             if i < j then
                 if rules_map[that .. "|" .. this] then
-                    fixed_update[i] = that
-                    fixed_update[j] = this
+                    fixed_update[i], fixed_update[j] = that, this
                     goto fixed
                 end
             elseif i > j then
                 if rules_map[this .. "|" .. that] then
-                    fixed_update[j] = that
-                    fixed_update[i] = this
+                    fixed_update[j], fixed_update[i] = that, this
                     goto fixed
                 end
             end

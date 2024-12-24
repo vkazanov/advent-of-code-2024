@@ -70,7 +70,8 @@ ordered according to a list of ordering list.
 In the naive version of Part1 I just check all pairs number pairs against a hash of rules,
 which makes O(N*N). Same for fixing in Part2.
 
-time lua part2.lua -> 1.84s for both parts.
+time lua part1.lua -> 25ms (part1)
+time lua part1.lua -> 1s (part1 + part2)
 
 ** Day 16
 
