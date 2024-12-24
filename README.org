@@ -60,6 +60,7 @@ through these.
 In Part2 I flatten the input into a string and match it against 4 possible patterns.
 
 time lua part1.lua -> 16ms
+
 time lua part2.lua -> 14ms
 
 ** Day 5 - rule checking (and a loop)
@@ -71,12 +72,31 @@ In the naive version of Part1 I just check all pairs number pairs against a hash
 which makes O(N*N). Same for fixing in Part2.
 
 time lua part1.lua -> 25ms (part1)
+
 time lua part1.lua -> 1s (part1 + part2)
 
 So instead of direct comparison I switched to using sorting with a custom sorting
 function, which is used for both parts:
 
 time lua part1.lua -> 8ms (part1 + part2)
+
+** Day 6 - the guard and the obstacle
+
+On [[file:6/][this day]] the problem was about moving the guard around the map. Part1 works fast even with
+a naive approach literal walking approach:
+
+time lua part1.lua -> 10ms
+
+Part2 uses backtracking for loop search with an obstacle, and the native stepping approach
+results in bad run time:
+
+time lua part1.lua -> 9s
+
+Notes:
+
+1. one way to speed this up would be to skip directly to the next obstacles once a test
+   obstacle run is setup. This is possible because an obstacle + a hit direction
+   immediately show what the next obstacle or end of map would be.
 
 ** Day 16
 

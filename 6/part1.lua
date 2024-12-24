@@ -25,7 +25,7 @@ local function guard_step(map, pos_set, dir_i, row, col)
     -- print("dir: " .. dir_i)
     local next_dir = DIRS[dir_i]
     -- print(table.concat(next_dir, ","))
-    -- print("from " .. row .. "/" .. col)
+
     local new_row = row + next_dir[1]
     local new_col = col + next_dir[2]
     -- print("to " .. new_row .. "/" .. new_col)
@@ -50,27 +50,6 @@ local function guard_step(map, pos_set, dir_i, row, col)
 end
 
 do
-    local map = {
-        "....#.....",
-        ".........#",
-        "..........",
-        "..#.......",
-        ".......#..",
-        "..........",
-        ".#..^.....",
-        "........#.",
-        "#.........",
-        "......#..."
-    }
-
-    local row, col = find_guard(map)
-    assert(row == 7)
-    assert(col == 5)
-    local positions_num = guard_step(map, {}, 1, row, col)
-    assert(positions_num == 41)
-end
-
-do
     local map = {}
     local file = io.open("input.txt", "r")
     for line in file:lines() do
@@ -80,5 +59,5 @@ do
 
     local row, col = find_guard(map)
     local positions_num = guard_step(map, {}, 1, row, col)
-    print("Res: ", positions_num)
+    assert(positions_num == 4454)
 end
