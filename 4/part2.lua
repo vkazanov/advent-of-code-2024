@@ -1,36 +1,36 @@
-local P2 = {}
+local tins = table.insert
 
-P2.pattern1 = {
+local pattern1 = {
     { [1] = "M", [3] = "S" },
     { [2] = "A"},
     { [1] = "M", [3] = "S" },
 }
 
-P2.pattern2 = {
+local pattern2 = {
     { [1] = "M", [3] = "M" },
     { [2] = "A"},
     { [1] = "S", [3] = "S" },
 }
 
-P2.pattern3 = {
+local pattern3 = {
     { [1] = "S", [3] = "S" },
     { [2] = "A"},
     { [1] = "M", [3] = "M" },
 }
 
-P2.pattern4 = {
+local pattern4 = {
     { [1] = "S", [3] = "M" },
     { [2] = "A"},
     { [1] = "S", [3] = "M" },
 }
 
-function P2.flatten(input)
+local function flatten(input)
     local width = #input[1]
     local flat = table.concat(input)
     return width, flat
 end
 
-function P2.flatten_pattern(pattern, offset)
+local function flatten_pattern(pattern, offset)
     local flat_pattern = {}
     local line_offset = 0
 
@@ -44,30 +44,24 @@ function P2.flatten_pattern(pattern, offset)
 end
 
 local function match(x, input, pattern)
-    -- print("check: " .. x)
     for i, char in pairs(pattern) do
         local pos = x + i - 1
-        -- print(pos .. ": " .. input:sub(pos, pos) .. " < " .. char)
         if input:sub(pos, pos) ~= char then
-            -- print(pos)
-            -- print(input:sub(pos, pos))
             return false
         end
     end
-    -- print(x)
-    -- print(input:sub(x, x))
     return true
 end
 
-function P2.count(input, pattern, width)
-    local count = 0
+local function count(input, pattern, width)
+    local cnt = 0
     local x = 1
 
     -- do not check the last 2 rows
     local max_x = #input - width * 2 - 2
     while x <= max_x do
         if match(x, input, pattern) then
-            count = count + 1
+            cnt = cnt + 1
         end
 
         x = x + 1
@@ -77,7 +71,23 @@ function P2.count(input, pattern, width)
         end
     end
 
-    return count
+    return cnt
 end
 
-return P2
+local input = {}
+for line in io.open("input.txt", "r"):lines() do
+    tins(input, line)
+end
+
+local width, line = flatten(input)
+
+pattern1 = flatten_pattern(pattern1, width)
+pattern2 = flatten_pattern(pattern2, width)
+pattern3 = flatten_pattern(pattern3, width)
+pattern4 = flatten_pattern(pattern4, width)
+
+local cnt = count(line, pattern1, width)
+    + count(line, pattern2, width)
+    + count(line, pattern3, width)
+    + count(line, pattern4, width)
+assert(cnt == 2048)

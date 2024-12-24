@@ -50,6 +50,19 @@ Notes:
 1. Could be speed up by avoid scanning intervals between don't and do but it just doesn't
    make sense at this point
 
+** Day 4 - XMAS search
+
+Sort of [[file:4/][boring again]], looking for lines.
+
+In Part1 I build a list of all diagonal, horizontal and vertical lines, and then grep
+through these.
+
+In Part2 I flatten the input into a string and match it against 4 possible patterns.
+
+time lua part1.lua -> 16ms
+time lua part2.lua -> 14ms
+
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single

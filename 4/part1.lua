@@ -1,20 +1,21 @@
-local Part1 = {}
+local tins = table.insert
+local tcon = table.concat
 
-function Part1.reverse_str(str)
+local function reverse_str(str)
     local reversed = {}
     for i = #str, 1, -1 do
-        table.insert(reversed, str:sub(i, i))
+        tins(reversed, str:sub(i, i))
     end
-    return table.concat(reversed)
+    return tcon(reversed)
 end
 
-function Part1.find_lines(input)
+local function find_lines(input)
     local lines = {}
 
     -- horizontal
     for row = 1, #input do
-        table.insert(lines, input[row])
-        table.insert(lines, Part1.reverse_str(input[row]))
+        tins(lines, input[row])
+        tins(lines, reverse_str(input[row]))
     end
 
     -- vertical
@@ -22,12 +23,12 @@ function Part1.find_lines(input)
         local chars = {}
         for r = 1, #input do
             local row = input[r]
-            table.insert(chars, row:sub(c, c))
+            tins(chars, row:sub(c, c))
         end
 
-        local vertical = table.concat(chars)
-        table.insert(lines, vertical)
-        table.insert(lines, Part1.reverse_str(vertical))
+        local vertical = tcon(chars)
+        tins(lines, vertical)
+        tins(lines, reverse_str(vertical))
     end
 
     -- top-down diagonal
@@ -37,14 +38,14 @@ function Part1.find_lines(input)
             local r, c = 1, start_c
             while r <= #input and c <= #input[1] do
                 local row = input[r]
-                table.insert(chars, row:sub(c, c))
+                tins(chars, row:sub(c, c))
                 r = r + 1
                 c = c + 1
             end
 
-            local diagonal = table.concat(chars)
-            table.insert(lines, diagonal)
-            table.insert(lines, Part1.reverse_str(diagonal))
+            local diagonal = tcon(chars)
+            tins(lines, diagonal)
+            tins(lines, reverse_str(diagonal))
         end
 
         for start_r = 2, #input do
@@ -52,14 +53,14 @@ function Part1.find_lines(input)
             local r, c = start_r, 1
             while r <= #input and c <= #input[1] do
                 local row = input[r]
-                table.insert(chars, row:sub(c, c))
+                tins(chars, row:sub(c, c))
                 r = r + 1
                 c = c + 1
             end
 
-            local diagonal = table.concat(chars)
-            table.insert(lines, diagonal)
-            table.insert(lines, Part1.reverse_str(diagonal))
+            local diagonal = tcon(chars)
+            tins(lines, diagonal)
+            tins(lines, reverse_str(diagonal))
         end
     end
 
@@ -70,14 +71,14 @@ function Part1.find_lines(input)
             local r, c = #input, start_c
             while r >= 1 and c <= #input[1] do
                 local row = input[r]
-                table.insert(chars, row:sub(c, c))
+                tins(chars, row:sub(c, c))
                 r = r - 1
                 c = c + 1
             end
 
-            local diagonal = table.concat(chars)
-            table.insert(lines, diagonal)
-            table.insert(lines, Part1.reverse_str(diagonal))
+            local diagonal = tcon(chars)
+            tins(lines, diagonal)
+            tins(lines, reverse_str(diagonal))
         end
 
         for start_r = #input - 1, 1, - 1 do
@@ -85,21 +86,21 @@ function Part1.find_lines(input)
             local r, c = start_r, 1
             while r >= 1 and c <= #input[1] do
                 local row = input[r]
-                table.insert(chars, row:sub(c, c))
+                tins(chars, row:sub(c, c))
                 r = r - 1
                 c = c + 1
             end
 
-            local diagonal = table.concat(chars)
-            table.insert(lines, diagonal)
-            table.insert(lines, Part1.reverse_str(diagonal))
+            local diagonal = tcon(chars)
+            tins(lines, diagonal)
+            tins(lines, reverse_str(diagonal))
         end
     end
 
     return lines
 end
 
-function Part1.count_occurs(line, pattern)
+local function count_occurs(line, pattern)
     local count = 0
     for _ in line:gmatch(pattern) do
         count = count + 1
@@ -107,4 +108,15 @@ function Part1.count_occurs(line, pattern)
     return count
 end
 
-return Part1
+
+local input = {}
+for line in io.open("input.txt", "r"):lines() do
+    tins(input, line)
+end
+
+local lines = find_lines(input)
+local count = 0
+for _, line in pairs(lines) do
+    count = count + count_occurs(line, "XMAS")
+end
+assert(count == 2685)
