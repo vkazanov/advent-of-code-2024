@@ -19,6 +19,24 @@ Both would basically become code golf excersises in Python, less convenient in L
 
 time lua part1.lua -> 3ms
 
+** Day 2
+
+[[file:2/part1.lua][Part1]] again, a simple code golf task: check if the numbers are either increasing or
+descreasing by a given number.
+
+time lua part1.lua -> 2ms
+
+[[file:2/part2.lua][Part2]] same as Part1 but also check if skipping 1 invalid number makes the report correct.
+I check the full report first and the look for a number to skip. This n ** 2 but should do
+for this particular task.
+
+time lua part2.lua -> 8ms
+
+Notes:
+
+1. Possible to improve by caching safe report subsequences starting with the invalid one
+   but no point in do this.
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single

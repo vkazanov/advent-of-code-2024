@@ -1,21 +1,18 @@
 local Part2 = {}
 
-local VALID_DIFF <const> = { [1] = true, [2] = true, [3] = true }
+local VALID_DIFF = { [1] = true, [2] = true, [3] = true }
+
 function Part2.is_safe(report)
-    local prev_diff = nil
+    local prev_diff = 0
 
     for i = 2, #report do
         local this_diff = report[i] - report[i-1]
 
         -- correct level diff
-        if not VALID_DIFF[math.abs(this_diff)] then
-            return false
-        end
+        if not VALID_DIFF[math.abs(this_diff)] then return false end
 
         -- same diff sign if there is a diff defined
-        if prev_diff ~= nil and this_diff * prev_diff < 0 then
-            return false
-        end
+        if this_diff * prev_diff < 0 then return false end
 
         prev_diff = this_diff
     end
@@ -50,4 +47,14 @@ function Part2.parse_report(line)
     return report
 end
 
-return Part2
+local file = io.open("input.txt", "r")
+
+local safe_report_num = 0
+for line in file:lines() do
+    local report = Part2.parse_report(line)
+    if Part2.is_dampened_safe(report) then
+        safe_report_num = safe_report_num + 1
+    end
+end
+
+assert(safe_report_num == 689)
