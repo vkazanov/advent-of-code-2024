@@ -73,6 +73,11 @@ which makes O(N*N). Same for fixing in Part2.
 time lua part1.lua -> 25ms (part1)
 time lua part1.lua -> 1s (part1 + part2)
 
+So instead of direct comparison I switched to using sorting with a custom sorting
+function, which is used for both parts:
+
+time lua part1.lua -> 8ms (part1 + part2)
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single

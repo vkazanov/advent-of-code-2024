@@ -1,28 +1,10 @@
 local tins = table.insert
 
-local function key(this, that)
-    return this .. "|" .. that
-end
-
-local function check(rules, update)
-    for i, this in pairs(update) do
-        for j, that in pairs(update) do
-            if i < j and rules[key(that, this)] then
-                return false
-            elseif i > j and rules[key(this, that)] then
-                return false
-            end
-        end
-    end
-
-    return true
-end
-
 local function fix(rules, update)
     table.sort(
         update,
         function(this, that)
-            return rules[key(this, that)]
+            return rules[this .. "|" .. that]
         end
     )
 end
@@ -38,19 +20,24 @@ end
 local correct_num = 0
 local fixed_num = 0
 for line in file:lines() do
-    local update = {}
+
+    local orig, fixed = {}, {}
     for page in line:gmatch("%d+") do
-        tins(update, tonumber(page))
+        tins(orig, tonumber(page))
+        tins(fixed, tonumber(page))
     end
 
-    if check(rules, update) then
-        correct_num = correct_num + update[#update // 2 + 1]
-
-    else
-        fix(rules, update)
-        fixed_num = fixed_num + update[#update // 2 + 1]
+    -- fix and see if anything was updated
+    fix(rules, fixed)
+    for k, v in ipairs(orig) do
+        if v ~= fixed[k] then
+            fixed_num = fixed_num + fixed[#fixed // 2 + 1]
+            goto fixed
+        end
     end
+    correct_num = correct_num + orig[#orig // 2 + 1]
 
+    ::fixed::
 end
 
 assert(correct_num == 5248)
