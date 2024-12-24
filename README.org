@@ -4,6 +4,21 @@
 
 * Solutions
 
+** Day 1
+
+[[file:1/part1.lua][Part1]] is about sorting 2 tables and then summing up the differences between smallest to
+largest pairs.
+
+time lua part1.lua -> 3ms
+
+[[file:1/part2.lua][Part2]] is just about counting the number of times numbers in the left table appear in the
+right table and summing up products of left side numbers and numbers of times they appear
+on the right.
+
+Both would basically become code golf excersises in Python, less convenient in Lua.
+
+time lua part1.lua -> 3ms
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single
@@ -26,6 +41,11 @@ There are 2 more necessary things: cut out suboptimal paths by tracking best nod
 Upon reaching the final node all the other optimal paths have to be recorded.
 
 time lua part2.lua -> 5s
+
+Notes to myself:
+
+1. both times are too big, the solution needs fixing
+2. code is dirty, would benefit from a clean up
 
 * Reference
 
