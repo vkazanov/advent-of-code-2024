@@ -62,6 +62,15 @@ In Part2 I flatten the input into a string and match it against 4 possible patte
 time lua part1.lua -> 16ms
 time lua part2.lua -> 14ms
 
+** Day 5 - rule checking (and a loop)
+
+The [[file:5/][first problem]] that has something interesting in it. The point is to check if rules are
+ordered according to a list of ordering list.
+
+In the naive version of Part1 I just check all pairs number pairs against a hash of rules,
+which makes O(N*N). Same for fixing in Part2.
+
+time lua part2.lua -> 1.84s for both parts.
 
 ** Day 16
 
