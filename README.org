@@ -2,6 +2,31 @@
 
 2024 is a year of Lua for me.
 
+* Solutions
+
+** Day 16
+
+[[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single
+step is worth 1 point, while a rotation is a 1000. In practice this means that a graph
+node a described by 2 vectors: a position vector and a direction vector. I used a
+heap-based Priority Queue to do Dijkstra-style shortest path search.
+
+time lua part1.lua -> 0.5s
+
+In [[file:16/part2.lua][Part 2]] the problem is modified with the additional requirement: count the number of
+optimal path nodes. In Dijkstra the optimal path is normally retrieved by storing prev
+nodes on all reached nodes including the target one. Getting the optimal path then
+requires an additional backwards traversal loop using the prev node links.
+
+Now, because there can be many optimal paths, both diverging and merging, instead of a
+single previous node, a set of previous optimal paths should be built along the pathfor
+every node.
+
+There are 2 more necessary things: cut out suboptimal paths by tracking best node score.
+Upon reaching the final node all the other optimal paths have to be recorded.
+
+time lua part2.lua -> 5s
+
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)
