@@ -1,54 +1,29 @@
-local Part2 = {}
+local tins = table.insert
 
-local INSTR_PATTERN <const> = "[%a']+%([%d,]*%)"
-
-local MUL_PATTERN <const> = "mul%((%d%d?%d?),(%d%d?%d?)%)"
-local DO_PATTERN <const> = "do%(%)"
-local DONT_PATTERN <const> = "don't%(%)"
-
-function Part2.find(input)
-    local instructions = {}
-    for instr_str in input:gmatch(INSTR_PATTERN) do
-
-        local left, right = string.match(instr_str, MUL_PATTERN)
+local function parse(input)
+    local instrs = {}
+    for instr_str in input:gmatch("[%a']+%([%d,]*%)") do
+        local left, right = string.match(instr_str, "mul%((%d%d?%d?),(%d%d?%d?)%)")
         if left ~= nil then
-            local instr = {
+            tins(instrs, {
                 type = "MUL",
                 left = tonumber(left),
                 right = tonumber(right)
-            }
-            table.insert(instructions, instr)
-            goto next_instr
+            })
+        elseif string.match(instr_str, "do%(%)") then
+            tins(instrs, { type = "DO", })
+        elseif string.match(instr_str, "don't%(%)") then
+            tins(instrs, { type = "DONT", })
         end
-
-        local m = string.match(instr_str, DO_PATTERN)
-        if m ~= nil then
-            local instr = {
-                type = "DO",
-            }
-            table.insert(instructions, instr)
-            goto next_instr
-        end
-
-        m = string.match(instr_str, DONT_PATTERN)
-        if m ~= nil then
-            local instr = {
-                type = "DONT",
-            }
-            table.insert(instructions, instr)
-            goto next_instr
-        end
-
-        ::next_instr::
     end
-    return instructions
+    return instrs
 end
 
-function Part2.run(instructions)
+local function run(instructions)
     local num = 0
     local is_enabled = true
     for _, instr in ipairs(instructions) do
-        if instr.type == "MUL" and is_enabled then
+        if is_enabled and instr.type == "MUL" then
             num = num + instr.left * instr.right
         elseif instr.type == "DO" then
             is_enabled = true
@@ -59,4 +34,9 @@ function Part2.run(instructions)
     return num
 end
 
-return Part2
+local file = io.open("input.txt", "r")
+local line = file:read("*all")
+
+local instrs = parse(line)
+local res = run(instrs)
+assert(res == 83158140, "Wrong result")

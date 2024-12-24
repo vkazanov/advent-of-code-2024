@@ -37,6 +37,19 @@ Notes:
 1. Possible to improve by caching safe report subsequences starting with the invalid one
    but no point in do this.
 
+** Day 3
+
+Both parts of [[file:3/][the day]] ask for some regex + maybe something like a virtual machine. Could
+have been better with a Perl-like regex engine but still ok.
+
+time lua part1.lua -> 2ms
+time lua part2.lua -> 2ms
+
+Notes:
+
+1. Could be speed up by avoid scanning intervals between don't and do but it just doesn't
+   make sense at this point
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single
