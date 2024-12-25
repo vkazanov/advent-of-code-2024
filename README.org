@@ -92,11 +92,13 @@ results in bad run time:
 
 time lua part1.lua -> 9s
 
-Notes:
+An improved version that when setting up an obstacle directly jumps to the closest
+obstacle instead of walking step by step:
 
-1. one way to speed this up would be to skip directly to the next obstacles once a test
-   obstacle run is setup. This is possible because an obstacle + a hit direction
-   immediately show what the next obstacle or end of map would be.
+time lua part2-optim.lua -> 300ms
+
+For obstacle indexing I just keep per-line, per-column lists of obstacles. A binary tree
+would be better.
 
 ** Day 16
 
