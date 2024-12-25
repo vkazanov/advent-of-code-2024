@@ -100,6 +100,16 @@ time lua part2-optim.lua -> 300ms
 For obstacle indexing I just keep per-line, per-column lists of obstacles. A binary tree
 would be better.
 
+** Day 7 - finding the right operators
+
+In [[file:7/][both parts]] the problem boils down to finding the right operators that would make inputs
+sum up to an expected number. Left-to-right, same priority, so no complex approaches
+necessary. Naive solutions:
+
+time lua part1.lua -> 3ms
+
+time lua part2.lua -> 10s
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single
