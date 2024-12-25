@@ -2,6 +2,43 @@
 
 2024 is a year of Lua for me.
 
+* Lua as a puzzle solving language
+
+After solving the majority of puzzles using pure Lua and whatever comes with it out of the
+box I feel that I have an opinion.
+
+The language is dead simple. Whatever few features it has are carefully picked to make
+make the language as expressible as possible. Lua is also superreadable: I had no problems
+sharing my solutions with people in private leaderboards.
+
+Favourite things about the language:
+
+- first-class functions/closures
+
+- iterators
+
+- OOP built around hashmaps, dedicated syntax and metatables
+
+- simple equality rules
+
+- truthiness done right: only false and nil are false, everything else is true
+
+- coroutines
+
+- primitive modules
+
+Things I hated for Advent of Code purposes:
+
+- global by default?!
+
+- barebones stdlib
+
+- 1-indexed tables
+
+- one and only one data structure
+
+TL;DR not bad, definitely better than Java or C or Go but worse than Python.
+
 * Solutions
 
 ** Day 1
