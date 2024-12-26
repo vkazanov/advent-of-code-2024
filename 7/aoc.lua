@@ -4,7 +4,7 @@ local tins = table.insert
 local tcon = table.concat
 local trem = table.remove
 local tmov = table.move
-local tunp = table.unpack
+local unpack = table.unpack
 
  -- Generic utils
 

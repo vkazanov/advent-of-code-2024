@@ -8,26 +8,25 @@ local function con(left, right) return tonumber(tostring(left) .. tostring(right
 
 local OPS = {add,mul,con,}
 
-local function calc(numbers, operators)
-    assert(#numbers == #operators + 1)
-
+local function calc(sum, numbers, operators)
     local left = numbers[1]
     for i, op in ipairs(operators) do
         left = op(left, numbers[i + 1])
+        if left > sum then return false end
     end
-
-    return left
+    return left == sum
 end
 
-local function check(sum, numbers)
-    for _, ops in ipairs(aoc.product_repeat(OPS, #numbers - 1)) do
-        if calc(numbers, ops) == sum then return true end
+local function check(sum, numbers, num_to_ops)
+    for _, ops in ipairs(num_to_ops[#numbers]) do
+        if calc(sum, numbers, ops) then return true end
     end
     return false
 end
 
 do
     local input = {}
+    local num_to_ops = {}
     local file = io.open("input.txt", "r")
     for line in file:lines() do
         local sum, num_list = line:match("(%d+): ([%d%s]+)")
@@ -36,11 +35,16 @@ do
             tins(numbers, tonumber(num))
         end
         input[tonumber(sum)] = numbers
+        if not num_to_ops[#numbers] then
+            num_to_ops[#numbers] = aoc.product_repeat(OPS, #numbers - 1)
+        end
     end
 
     local result = 0
     for sum, numbers in pairs(input) do
-        if check(sum, numbers, {}) then result = result + sum end
+        if check(sum, numbers, num_to_ops) then
+            result = result + sum
+        end
     end
     assert(result == 92612386119138)
 end

@@ -82,6 +82,7 @@ Both parts of [[file:3/][the day]] ask for some regex + maybe something like a v
 have been better with a Perl-like regex engine but still ok.
 
 time lua part1.lua -> 2ms
+
 time lua part2.lua -> 2ms
 
 Notes:
@@ -148,6 +149,32 @@ necessary. Naive solutions:
 time lua part1.lua -> 3ms
 
 time lua part2.lua -> 10s
+
+Notes:
+
+1. might be possible to reuse some of the computation, i.e. using a map of sums to
+   remaining numbers.
+
+** Day 8 - antinodes on a grid
+
+On Day 8 the problem needed taking pairs of antennas and marking antinode coordinates in a
+set. Could have been cleaner but works fast enough anyways.
+
+time lua part1.lua -> 2ms
+
+time lua part2.lua -> 3ms
+
+** Day 9 - disk fragmentation
+
+The disk fragmentation problem where the program has to rearrange files according to
+simple (part1) and slightly more involved rules (part2).
+
+time lua part1.lua -> 27ms
+
+time lua part2.lua -> 90s
+
+The problem with second approach is that I work on bytes directly when representing byte
+spans would be much more efficient and readable.
 
 ** Day 16
 
