@@ -27,6 +27,8 @@ Favourite things about the language:
 
 - primitive modules
 
+- tail call optimization
+
 Things I hated for Advent of Code purposes:
 
 - global by default?!

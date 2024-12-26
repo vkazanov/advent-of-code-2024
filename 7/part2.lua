@@ -1,5 +1,6 @@
+local aoc = require"aoc"
+
 local tins = table.insert
-local trem = table.remove
 
 local function add(left, right) return left + right end
 local function mul(left, right) return left * right end
@@ -18,15 +19,10 @@ local function calc(numbers, operators)
     return left
 end
 
-local function check(sum, numbers, operators)
-    if #operators + 1 == #numbers then return calc(numbers, operators) == sum end
-
-    for _, op in pairs(OPS) do
-        tins(operators, op)
-        if check(sum, numbers, operators) then return true end
-        trem(operators)
+local function check(sum, numbers)
+    for _, ops in ipairs(aoc.product_repeat(OPS, #numbers - 1)) do
+        if calc(numbers, ops) == sum then return true end
     end
-
     return false
 end
 
