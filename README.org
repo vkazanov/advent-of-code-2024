@@ -176,6 +176,15 @@ time lua part2.lua -> 90s
 The problem with second approach is that I work on bytes directly when representing byte
 spans would be much more efficient and readable.
 
+** Day 10 - trail scores
+
+Walking the map using DFS + simple rules.
+
+time lua part1.lua -> 13ms
+
+time lua part2.lua -> 15ms
+
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single

@@ -12,11 +12,13 @@ function aoc.mayprint(...)
 end
 
 function aoc.fline(fname)
-    local f <close> = io.open(fname, "r")
+    if not fname then fname = "input.txt" end
+    local f = io.open(fname, "r")
     return f:read("*all")
 end
 
 function aoc.flines(fname)
+    if not fname then fname = "input.txt" end
     local f = io.open(fname, "r")
     return f:lines()
 end

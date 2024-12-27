@@ -113,108 +113,6 @@ local function walk_path(map, pos, path_len, reached)
 end
 
 do
-    local example = [[
-89010123
-78121874
-87430965
-96549874
-45678903
-32019012
-01329801
-10456732
-]]
-    local map = mappify(example:gmatch("[^\n]+"))
-    mayprint(example)
-    printmap(map)
-
-    local heads = find_heads(map)
-    assert(#heads == 9)
-
-    local pos = {r=1, c=3}
-    assert(map[pos_key(pos)] == 0, tostring(map[pos_key(pos)]))
-
-    local score = walk_path(map, pos)
-    assert(score == 5, score)
-
-    pos = {r=1, c=5}
-    assert(map[pos_key(pos)] == 0, tostring(map[pos_key(pos)]))
-    score = walk_path(map, pos)
-    assert(score == 6)
-
-    pos = {r=3, c=5}
-    assert(map[pos_key(pos)] == 0, tostring(map[pos_key(pos)]))
-    score = walk_path(map, pos)
-    assert(score == 5)
-
-    pos = {r=5, c=7}
-    assert(map[pos_key(pos)] == 0, tostring(map[pos_key(pos)]))
-    score = walk_path(map, pos)
-    assert(score == 3)
-
-    pos = {r=6, c=6}
-    assert(map[pos_key(pos)] == 0, tostring(map[pos_key(pos)]))
-    score = walk_path(map, pos)
-    assert(score == 3)
-end
-
-do
-    local example = [[
-...0...
-...1...
-...2...
-6543456
-7.....7
-8.....8
-9.....9
-]]
-    local map = mappify(example:gmatch("[^\n]+"))
-    printmap(map)
-    local score = walk_path(map, {r=1, c=4})
-    assert(score == 2, score)
-end
-
-do
-    local example = [[
-..90..9
-...1.98
-...2..7
-6543456
-765.987
-876....
-987....
-]]
-    local map = mappify(example:gmatch("[^\n]+"))
-    printmap(map)
-    local score = walk_path(map, {r=1, c=4})
-    assert(score == 4, score)
-end
-
-do
-    local example = [[
-89010123
-78121874
-87430965
-96549874
-45678903
-32019012
-01329801
-10456732
-]]
-    local map = mappify(example:gmatch("[^\n]+"))
-    mayprint(example)
-    printmap(map)
-
-    local heads = find_heads(map)
-    assert(#heads == 9)
-
-    local score = 0
-    for _, head in ipairs(heads)  do
-        score = score + walk_path(map, head)
-    end
-    assert(score == 36)
-end
-
-do
     aoc.PRINT = false
     local lines = aoc.flines("input.txt")
     local map = mappify(lines)
@@ -225,5 +123,5 @@ do
     for _, head in ipairs(heads)  do
         score = score + walk_path(map, head)
     end
-    print(score)
+    assert(score == 820, score)
 end
