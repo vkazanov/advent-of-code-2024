@@ -285,6 +285,23 @@ Notes:
 1. It should be possible to limit the amount of path rebuilding in part2 by only
    revisiting tiles whenever necessary.
 
+** Day 19 - collecting towel patterns (using a trie)
+
+Here the point is to collect patterns using a predefined subpattern list.
+
+In part1 I just match pattern compatiblity using a recursive funciton one by one.
+
+In part2 the point is to check every possible design. I use DP to cache suppeterns already
+explored:
+
+time lua part1.lua -> 49ms
+
+time lua part2.lua -> 250ms
+
+One last improvement is using a trie to skip prefixes that can start a given subpattern:
+
+time lua part2-trie.lua -> 13ms
+
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)

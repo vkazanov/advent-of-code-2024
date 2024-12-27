@@ -11,11 +11,8 @@ local ssplit = aoc.str_split
 local arreq = aoc.arr_eq
 
 local function count(s, tr, cache)
-    assert(cache)
-
     local res = cache[s]
     if res then return cache[s] end
-
     if #s == 0 then return 1 end
 
     res = 0
