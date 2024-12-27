@@ -258,6 +258,18 @@ Notes:
 1. both times are too big, the solution needs fixing
 2. code is dirty, would benefit from a clean up
 
+** Day 17 - implementing a VM and decompiling a program
+
+The first part was trivial: create the vm, run the code, get the output.
+
+The second part involved creative thinking but turned out to be not too hard after all. By
+looking at the code provided, it became clear that it's possible to walk backwards from a
+final vm state to the initial state of a variable, which resulted in a minimal run time.
+
+time lua part1.lua -> 0.2ms
+
+time lua part2.lua -> 1ms
+
 ** Day 18 - falling broken memory bytes
 
 Part1 - find the optimal path using Dijkstra. Part2 - mark the optimal path. Whenever a
