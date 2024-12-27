@@ -12,7 +12,6 @@ local tunp = aoc.tunp
 local ssplit = aoc.str_split
 local arreq = aoc.arr_eq
 
-
 local spos, m, epos
 
 spos = vec { 0, 0 }
@@ -31,12 +30,11 @@ for c = 1, 1024 do m[corrupted[c]] = "#" end
 local pq = PQ.new()
 pq:enqueue(spos, 0)
 
+local res
 while not pq:empty() do
     local p, s = pq:dequeue()
     m[p] = "X"
-    -- m:print()
-    -- print()
-    if p == epos then print(s) break end
+    if p == epos then res = s break end
 
     for _, next_p in pairs { p:left(), p:right(), p:up(), p:down() } do
 
@@ -48,3 +46,5 @@ while not pq:empty() do
         ::continue::
     end
 end
+
+assert(res == 408)

@@ -2,15 +2,10 @@ local PQ = require "PriorityQueue"
 
 local aoc = require "aoc"
 aoc.PRINT = false
-local mayprint = aoc.mayprint
 
 local vec = aoc.vec
 local tins = aoc.tins
-local tcon = aoc.tcon
-local trem = aoc.trem
 local tunp = aoc.tunp
-local ssplit = aoc.str_split
-local arreq = aoc.arr_eq
 
 local spos, m, epos
 
@@ -38,7 +33,7 @@ local function find_path(map, sp, ep)
         pp, s = pq:dequeue()
         p = tunp(pp)
 
-        if p == ep then return s, pos2prev end
+        if p == ep then return pos2prev end
 
         for _, next_p in pairs { p:left(), p:right(), p:up(), p:down() } do
             if not map:in_bounds(next_p) then goto continue end
@@ -66,15 +61,17 @@ local function reset(map)
     map:apply(function (p, ch) if ch == "X" then map[p] = "." end end)
 end
 
-local s, pos2prev = find_path(m, spos, epos)
+local pos2prev = find_path(m, spos, epos)
 mark(m, epos, spos, pos2prev)
+local res
 for _, c in ipairs(corrupted) do
     if m[c] ~= "X" then m[c] = "#"; goto continue end
     m[c] = "#"
     reset(m)
-    s, pos2prev = find_path(m, spos, epos)
-    if not s then print("res: ", c); break end
+    pos2prev = find_path(m, spos, epos)
+    if not pos2prev then res = c; break end
     mark(m, epos, spos, pos2prev)
 
     ::continue::
 end
+assert(tostring(res) == "45,16")

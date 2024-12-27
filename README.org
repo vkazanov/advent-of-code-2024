@@ -230,7 +230,7 @@ time lua part1.lua -> 13ms
 
 time lua part2.lua -> 140ms
 
-** Day 16
+** Day 16 - counting the number of nodes in optimal paths
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single
 step is worth 1 point, while a rotation is a 1000. In practice this means that a graph
@@ -253,10 +253,25 @@ Upon reaching the final node all the other optimal paths have to be recorded.
 
 time lua part2.lua -> 5s
 
-Notes to myself:
+Notes:
 
 1. both times are too big, the solution needs fixing
 2. code is dirty, would benefit from a clean up
+
+** Day 18 - falling broken memory bytes
+
+Part1 - find the optimal path using Dijkstra. Part2 - mark the optimal path. Whenever a
+falling byte changes the optimal path - try to find a better one starting with the end
+position.
+
+time lua part1.lua -> 17ms
+
+time lua part2.lua -> 1.2s
+
+Notes:
+
+1. It should be possible to limit the amount of path rebuilding in part2 by only
+   revisiting tiles whenever necessary.
 
 * Reference
 
