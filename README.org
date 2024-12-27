@@ -202,6 +202,14 @@ time lua part1.lua -> 150ms
 
 time lua part2.lua -> 115ms
 
+** Day 13 - Solving on paper
+
+A cute little puzzle where using anything but paper (part1) can sometimes be an overkill .
+Part2 shows how solving an equation on paper sometimes works better.
+
+time lua part1.lua -> 3s
+
+time lua part2.lua -> 2ms
 
 ** Day 16
 
