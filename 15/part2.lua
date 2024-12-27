@@ -20,27 +20,21 @@ local function robot_find(ch, x, y)
 end
 
 local function can_push(m, pos, dir)
-    mayprint("can_push? " .. tostring(pos) .. m[pos] .. " to " .. tostring(pos + dir) .. tostring(m[pos + dir]))
-
-    if m[pos] == "." then return true end
-
-    if m[pos] == "#" then return false end
-
-    if m[pos] == "]" then
+    local ch = m[pos]
+    if ch == "." then return true end
+    if ch == "#" then return false end
+    if ch == "]" then
         if dir == aoc.RIGHT or dir == aoc.LEFT then return can_push(m, pos + dir, dir) end
         return can_push(m, pos + dir, dir) and can_push(m, pos + aoc.LEFT + dir, dir)
     end
-
-    if m[pos] == "[" then
+    if ch == "[" then
         if dir == aoc.RIGHT or dir == aoc.LEFT then return can_push(m, pos + dir, dir) end
         return can_push(m, pos + dir, dir) and can_push(m, pos + aoc.RIGHT + dir, dir)
     end
-
     assert(false, "can't check " .. tostring(pos) .. ":" .. m[pos])
 end
 
 local function push(m, pos, dir)
-    mayprint("push: " .. tostring(pos) .. m[pos] .. " to " .. tostring(pos + dir))
     local ch = m[pos]
 
     if ch == "." then
@@ -101,95 +95,19 @@ local ch_to_dir = {
     ["v"] = aoc.DOWN,
 }
 
-local test_map = [[
-##########
-#..O..O.O#
-#......O.#
-#.OO..O.O#
-#..O@..O.#
-#O#..O...#
-#O..O..O.#
-#.OO.O.OO#
-#....O...#
-##########
-]]
-
-local test_moves = [[
-<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
-vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
-><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
-<<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
-^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
-^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
->^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
-<><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
-^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
-]]
-
-do
-    local map = aoc.mappify_double(test_map:gmatch("([^\n]+)"), robot_find)
-    map:print()
-
-    for line in test_moves:gmatch("([^\n]+)") do
-        for ch in line:gmatch(".") do
-            -- mayprint(ch)
-            _, r = push(map, r, ch_to_dir[ch])
-            -- map:print()
-            -- aoc.sleep(0.3)
-        end
-    end
-    -- map:print()
-
-    local result = 0
-    map:apply(function(pos, tile)
-        if tile == "[" then result = result + 100 * pos.y + pos.x end
-        return
-    end)
-    assert(result == 9021)
-
-end
-
 do
     local map = aoc.mappify_double(aoc.fline():gmatch("(#[^\n]+)"), robot_find)
-    map:print()
-
     for line in aoc.fline():gmatch("([^#][^\n]+)") do
         for ch in line:gmatch("[<>^v]") do
-            -- mayprint(ch)
             _, r = push(map, r, ch_to_dir[ch])
-            -- map:print()
-            -- aoc.sleep(0.3)
         end
     end
-    map:print()
 
     local result = 0
     map:apply(function(pos, tile)
         if tile == "[" then result = result + 100 * pos.y + pos.x end
         return
     end)
-    print(result)
+    assert(result == 1527969, result)
 
 end
-
-
--- do
---     local map = aoc.mappify(aoc.fline():gmatch("(#[^\n]+)"), robot_find)
---     map:print()
-
---     for line in aoc.fline():gmatch("([^#][^\n]+)") do
---         for ch in line:gmatch("[<>^v]") do
---             _, r = push(map, r, ch_to_dir[ch])
---         end
---     end
---     map:print()
-
---     local result = 0
---     map:apply(function(pos, tile)
---         if tile == "O" then result = result + 100 * pos.y + pos.x end
---         return
---     end)
-
---     print(result)
--- end

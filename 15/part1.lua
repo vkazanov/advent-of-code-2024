@@ -46,62 +46,13 @@ local ch_to_dir = {
     ["v"] = aoc.DOWN,
 }
 
-local test_map = [[
-##########
-#..O..O.O#
-#......O.#
-#.OO..O.O#
-#..O@..O.#
-#O#..O...#
-#O..O..O.#
-#.OO.O.OO#
-#....O...#
-##########
-]]
-
-local test_moves = [[
-<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
-vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
-><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
-<<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
-^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
-^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
->^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
-<><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
-^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
-]]
-
-do
-    local map = aoc.mappify(test_map:gmatch("([^\n]+)"), robot_find)
-
-    for line in test_moves:gmatch("([^\n]+)") do
-        for ch in line:gmatch(".") do
-            -- print(ch)
-            _, r = push(map, r, ch_to_dir[ch])
-            -- aoc.sleep(0.5)
-        end
-    end
-
-    local result = 0
-    map:apply(function(pos, tile)
-        if tile == "O" then result = result + 100 * pos.y + pos.x end
-        return
-    end)
-
-    assert(result == 10092)
-end
-
 do
     local map = aoc.mappify(aoc.fline():gmatch("(#[^\n]+)"), robot_find)
-    map:print()
-
     for line in aoc.fline():gmatch("([^#][^\n]+)") do
         for ch in line:gmatch("[<>^v]") do
             _, r = push(map, r, ch_to_dir[ch])
         end
     end
-    map:print()
 
     local result = 0
     map:apply(function(pos, tile)

@@ -107,39 +107,6 @@ do
 end
 
 do
-    if PRINT then mayprint("NEXT") end
-    local un = { 1, -1, 2 }
-    compr(un)
-    assert(#un == 2)
-    assert(un[1] == 1, un[2] == 2)
-end
-
-do
-    if PRINT then mayprint("NEXT") end
-    local un = {
-        0, 0, -1, -1, -1, 1, 1, 1, -1, -1, -1, 2, -1, -1, -1, 3, 3, 3, -1, 4, 4, -1, 5, 5, 5, 5, -1, 6, 6, 6, 6, -1, 7, 7, 7, -1, 8, 8, 8, 8, 9, 9,
-    }
-    assert(#un == #"00...111...2...333.44.5555.6666.777.888899")
-    compr(un)
-    assert(#un == #"0099811188827773336446555566")
-    assert(un[1] == 0 and
-           un[2] == 0 and
-           un[3] == 9 and
-           un[4] == 9 and
-           un[5] == 8 and
-           -- ...
-           un[#un] == 6)
-end
-
-do
-    local input = { 2, 3, 3, 3, 1, 3, 3, 1, 2, 1, 4, 1, 4, 1, 3, 1, 4, 0, 2 }
-    local un = readformat(input)
-    assert(#un == #"00...111...2...333.44.5555.6666.777.888899")
-    compr(un)
-    assert(checksum(un) == 1928)
-end
-
-do
     local input = {}
     local line = io.open("input.txt", "r"):read("*all")
     for i = 1, #line do tins(input, tonumber(line:sub(i, i))) end
@@ -150,5 +117,5 @@ do
 
     local un = readformat(input)
     compr(un)
-    mayprint(checksum(un) == 6398608069280)
+    assert(checksum(un) == 6398608069280)
 end

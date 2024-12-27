@@ -211,6 +211,25 @@ time lua part1.lua -> 3s
 
 time lua part2.lua -> 2ms
 
+** Day 14 - Looking for a tree picture
+
+The controversial puzzle. In the first part we had to program point movement with
+wrapping. In the second part I had to find a tree, which I did by manually looking for
+straight lines longer than N=5.
+
+** Day 15 - pushing boxes, Sokoban style
+
+In this puzzle a robot pushes boxes around. The second part of the puzzle increases
+complexity by introducing boxes than cover 2 map tiles.
+
+The first part is easy. The solution was to recursively check if pushing is possible.
+Solving the 2nd part mostly boilied down to introducing additional recursive rules around
+pushing box pieces.
+
+time lua part1.lua -> 13ms
+
+time lua part2.lua -> 140ms
+
 ** Day 16
 
 [[file:16/part1.lua][Part 1]] is a pretty boring shortest path problem on a grid with a little twist: a single
