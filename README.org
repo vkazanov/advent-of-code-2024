@@ -184,7 +184,7 @@ time lua part1.lua -> 13ms
 
 time lua part2.lua -> 15ms
 
-** Day 10 - counting stones
+** Day 11 - counting stones
 
 A trivial counting problem. DP/caching makes the speed acceptable:
 
@@ -192,6 +192,15 @@ time lua part1.lua -> 81ms
 
 time lua part2.lua -> 95ms
 
+** Day 12 - fencing price
+
+Again, nothing complicated. The regions are filled, then fence prices are calculated using
+vertical/horizontal line scanning. A bunch of corner cases, the code is hairy but works
+ok:
+
+time lua part1.lua -> 150ms
+
+time lua part2.lua -> 115ms
 
 
 ** Day 16

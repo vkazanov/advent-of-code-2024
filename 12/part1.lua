@@ -1,5 +1,4 @@
 local aoc = require "aoc"
-
 aoc.PRINT = true
 local mayprint = aoc.mayprint
 
