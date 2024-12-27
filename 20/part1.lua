@@ -66,27 +66,8 @@ local function count(m, sp, ep, p2p, p2t)
     return cnt
 end
 
-local input = [[
-###############
-#...#...#.....#
-#.#.#.#.#.###.#
-#S#...#.#.#...#
-#######.#.#.###
-#######.#.#...#
-#######.#.###.#
-###..E#...#...#
-###.#######.###
-#...###...#...#
-#.#####.#.###.#
-#.#...#.#.#...#
-#.#.#.#.#.#.###
-#...#...#...###
-###############
-]]
-
 local spos, epos
 local map = aoc.mappify_lines(
-    -- input:gmatch("([^\n]+)"),
     aoc.flines(),
     function(ch, pos)
         if ch == "S" then
@@ -97,10 +78,8 @@ local map = aoc.mappify_lines(
         return ch
     end
 )
-map:print()
-print(spos, epos)
 
 local pos2prev, pos2time = find(map, spos, epos)
 local cnt = count(map, spos, epos, pos2prev, pos2time)
 
-print(cnt)
+assert(cnt, 1441)

@@ -302,6 +302,26 @@ One last improvement is using a trie to skip prefixes that can start a given sub
 
 time lua part2-trie.lua -> 13ms
 
+** Day 20 - maze walk with temporary cheat jumps
+
+Here it is an easy single path walk but sometimes the walls disappear and we need to count
+hom many jumps can save at least a given number of picoseconds.
+
+In Part1 I for some reason used unnecessary Dijktra along with counting logic along the
+way.
+
+time lua part1.lua -> 60ms
+
+In Part2 the rules are updated to complicate the cheating logic. My solution was checking
+every possible cheat position along the way:
+
+time lua part2.lua -> 3.2s
+
+But a hint online where somebody showed how it only made sense to check positions along a
+certain distance speed up the solution massively:
+
+time lua part2-optim.lua -> 150ms
+
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)
