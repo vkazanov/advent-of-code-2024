@@ -184,6 +184,15 @@ time lua part1.lua -> 13ms
 
 time lua part2.lua -> 15ms
 
+** Day 10 - counting stones
+
+A trivial counting problem. DP/caching makes the speed acceptable:
+
+time lua part1.lua -> 81ms
+
+time lua part2.lua -> 95ms
+
+
 
 ** Day 16
 

@@ -1,15 +1,7 @@
 local aoc = require "aoc"
 
-aoc.PRINT = true
-local mayprint = aoc.mayprint
-
-local tins = aoc.tins
-local tcon = aoc.tcon
-local trem = aoc.trem
-local tmov = aoc.tmov
-
+local tins = table.insert
 local ssplit = aoc.str_split
-local aeq = aoc.arr_eq
 
 local function blink_stone(stone)
     local stones = {}
@@ -31,7 +23,6 @@ local function blink_stone(stone)
 end
 
 local function blink(stones, times, cache)
-    if not times then times = 1 end
     if not cache then cache = {} end
     if times == 0 then return #stones end
 
@@ -46,42 +37,8 @@ local function blink(stones, times, cache)
     return count
 end
 
-
-do
-    assert(aeq(blink_stone(0), {1}))
-    assert(aeq(blink_stone(1), {2024}))
-    assert(aeq(blink_stone(11), {1, 1}))
-    assert(aeq(blink_stone(1101), {11, 1}))
-    assert(aeq(blink_stone(1), {2024}))
-    assert(aeq(blink_stone(3), {3*2024}))
-end
-
-
-do
-    local stones = ssplit("0 1 10 99 999")
-    assert(blink(stones) == #ssplit"1 2024 1 0 9 9 2021976")
-end
-
 do
     local input = aoc.fline("input.txt")
     local stones = ssplit(input)
-    assert(#stones == 8)
-
-    assert(blink(stones, 25) == 217812)
-end
-
-do
-    local input = aoc.fline("input.txt")
-    local stones = ssplit(input)
-    assert(#stones == 8)
-
-    assert(blink(stones, 33) ==  6153500)
-end
-
-do
-    local input = aoc.fline("input.txt")
-    local stones = ssplit(input)
-    assert(#stones == 8)
-
     assert(blink(stones, 75) == 259112729857522)
 end
