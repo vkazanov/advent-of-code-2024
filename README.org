@@ -285,6 +285,14 @@ Notes:
 1. It should be possible to limit the amount of path rebuilding in part2 by only
    revisiting tiles whenever necessary.
 
+2. the other option is a bisection in time.
+
+What I do: mark everything reacheable from start with a BFS run. Then start removing bytes
+one by one, expanding the region using additional BFS runs ONLY if we've removed something
+near the region. Works like charm!
+
+time lua part2-optim.lua -> 18ms
+
 ** Day 19 - collecting towel patterns (using a trie)
 
 Here the point is to collect patterns using a predefined subpattern list.
