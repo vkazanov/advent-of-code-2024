@@ -175,6 +175,7 @@ aoc.dir_to_rev = {
 function Vec:rot_clock() return aoc.dir_to_rot_clock[self] end
 function Vec:rot_counter() return aoc.dir_to_rot_counter[self] end
 function Vec:reverse() return aoc.dir_to_rev[self] end
+function Vec:manhattan_len() return math.abs(self.x) + math.abs(self.y) end
 
 function Vec:up() return self + aoc.UP end
 function Vec:up_left() return aoc.Vec(self.x - 1, self.y - 1) end

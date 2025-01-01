@@ -85,22 +85,34 @@ function aoc.gcd(a, b)
     return a
 end
 
- -- Combinatorial stuff
+function aoc.permutations(t)
+    local results = {}
 
-function aoc.product_repeat(elements, repeats)
-    local result = { {} }
-
-    for _ = 1, repeats do
-        local new_result = { }
-        for _, r in ipairs(result) do
-            for _, v in ipairs(elements) do
-                tins(new_result, { v, unpack(r) })
+    -- Helper function: permute the table 'arr' using the first 'n' elements
+    local function permute(arr, n)
+        if n == 1 then
+            -- Make a copy to avoid referencing the same table
+            local copy = {}
+            for i = 1, #arr do
+                copy[i] = arr[i]
+            end
+            table.insert(results, copy)
+        else
+            for i = 1, n do
+                -- Swap elements
+                arr[i], arr[n] = arr[n], arr[i]
+                -- Recurse for the next position
+                permute(arr, n - 1)
+                -- Swap back (backtrack)
+                arr[i], arr[n] = arr[n], arr[i]
             end
         end
-        result = new_result
     end
 
-    return result
+    -- Start the recursive process
+    permute(t, #t)
+
+    return results
 end
 
  -- Vector class
@@ -163,6 +175,7 @@ aoc.dir_to_rev = {
 function Vec:rot_clock() return aoc.dir_to_rot_clock[self] end
 function Vec:rot_counter() return aoc.dir_to_rot_counter[self] end
 function Vec:reverse() return aoc.dir_to_rev[self] end
+function Vec:manhattan_len() return math.abs(self.x) + math.abs(self.y) end
 
 function Vec:up() return self + aoc.UP end
 function Vec:up_left() return aoc.Vec(self.x - 1, self.y - 1) end
