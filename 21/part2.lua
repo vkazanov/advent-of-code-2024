@@ -177,14 +177,12 @@ local input = {
 local res = 0
 for code, num in pairs(input) do
     local numpad_codes = {}
-    for c in code:gmatch(".") do
-        tins(numpad_codes, c)
-    end
+    for c in code:gmatch(".") do tins(numpad_codes, c) end
 
     local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos)
 
     local cache = {}
-    for i = 1, 25 do
+    for i = 1, 2 do
         keypad_codes = translate(keypad_codes, keypad_to_pos, keypad_to_pos, cache)
         print(i, #keypad_codes)
     end
