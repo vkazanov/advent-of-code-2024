@@ -345,7 +345,10 @@ What worked was realizing that the state of every movement is determined by 3 va
 previous char, this char and depth of translation. Having this meant that caching becoems
 feasible and the problem turns into a trivial DP instance:
 
-time lua part2.lua -> 8ms
+time lua part2.lua -> 15ms
+
+Note how there's also a secondary movement cache that speeds up movements from 50ms to
+15ms. This could have been a simple table but anyway.
 
 * Reference
 

@@ -37,7 +37,11 @@ local vec_to_ch = {
     ["^"] = aoc.UP, ["v"] = aoc.DOWN,
 }
 
-local function translate_ch(prev_ch, ch, current_table, control_table)
+local function translate_ch(prev_ch, ch, current_table, control_table, movement_cache)
+    if movement_cache[prev_ch .. "|" .. ch] then
+        return movement_cache[prev_ch .. "|" .. ch]
+    end
+
     local dead_pos = current_table["X"]
     local control_chs = {}
     local pos = current_table[prev_ch]
@@ -102,6 +106,8 @@ local function translate_ch(prev_ch, ch, current_table, control_table)
 
     tins(control_chs, "A")
 
+    movement_cache[prev_ch .. "|" .. ch] = control_chs
+
     return control_chs
 end
 
@@ -109,14 +115,16 @@ local function translate(codes)
     local control_chs = {}
 
     for i, _ in ipairs(codes) do
-        local ch_control_chs = translate_ch(codes[i - 1] or "A", codes[i], numpad_to_pos, keypad_to_pos)
+        local ch_control_chs = translate_ch(codes[i - 1] or "A", codes[i], numpad_to_pos, keypad_to_pos, {})
         for _, v in ipairs(ch_control_chs) do tins(control_chs, v) end
     end
     return control_chs
 end
 
-local function count_code(prev_ch, ch, depth, cache)
+local function count_code(prev_ch, ch, depth, cache, movement_cache)
     cache = cache or {}
+    movement_cache = movement_cache or {}
+
     if depth == 0 then return 1 end
 
     local key = prev_ch .. "/" .. ch .. "/" .. tostring(depth)
@@ -124,9 +132,9 @@ local function count_code(prev_ch, ch, depth, cache)
 
     local res = 0
 
-    local ch_control_chs = translate_ch(prev_ch, ch, keypad_to_pos, keypad_to_pos)
+    local ch_control_chs = translate_ch(prev_ch, ch, keypad_to_pos, keypad_to_pos, movement_cache)
     for i = 1, #ch_control_chs do
-        res = res + count_code(ch_control_chs[i - 1] or "A", ch_control_chs[i], depth - 1, cache)
+        res = res + count_code(ch_control_chs[i - 1] or "A", ch_control_chs[i], depth - 1, cache, movement_cache)
     end
 
     cache[key] = res
