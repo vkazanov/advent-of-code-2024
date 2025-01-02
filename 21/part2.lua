@@ -38,10 +38,8 @@ local keypad_to_pos = {
 }
 
 local vec_to_ch = {
-    ["<"] = aoc.LEFT,
-    [">"] = aoc.RIGHT,
-    ["^"] = aoc.UP,
-    ["v"] = aoc.DOWN,
+    ["<"] = aoc.LEFT, [">"] = aoc.RIGHT,
+    ["^"] = aoc.UP, ["v"] = aoc.DOWN,
 }
 
 local function translate(codes, current_table, control_table)
@@ -149,7 +147,7 @@ for code, num in pairs(input) do
 
     local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos)
 
-    for i = 1, 20 do
+    for i = 1, 2 do
         keypad_codes = translate(keypad_codes, keypad_to_pos, keypad_to_pos)
         print(i, #keypad_codes)
     end
