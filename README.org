@@ -350,6 +350,17 @@ time lua part2.lua -> 15ms
 Note how there's also a secondary movement cache that speeds up movements from 50ms to
 15ms. This could have been a simple table but anyway.
 
+** Day 22 - banana prices
+
+An easy problem. For the first part just calculate the price, while for the second one
+use a sliding window of a secret sequence to record possible prices:
+
+time lua part1.lua -> 380ms
+
+time lua part2.lua -> 4.5s
+
+Kind of slow. This really looks like a matrix multiplication problem.
+
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)

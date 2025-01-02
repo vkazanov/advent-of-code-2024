@@ -1,20 +1,4 @@
 local aoc = require "aoc"
-aoc.PRINT = false
-local mayprint = aoc.mayprint
-
-local Vec = aoc.Vec
-
-local ssplit = aoc.str_split
-local arreq = aoc.arr_eq
-
-local tins = table.insert
-local tcon = table.concat
-local trem = table.remove
-local tunp = table.unpack
-local tpck = table.pack
-local tsrt = table.sort
-
--- TODO: go for it!
 
 local function mix(num, secret)
     return num ~ secret
@@ -26,10 +10,10 @@ end
 
 local function next(secret)
     local a = secret << 6
-    secret = mix(a, secret)
+    secret = prune(mix(a, secret))
 
     local b = secret >> 5
-    secret = prune(b)
+    secret = prune(mix(b, secret))
 
     local c = secret << 11
     secret = prune(mix(c, secret))
@@ -37,4 +21,10 @@ local function next(secret)
     return secret
 end
 
--- TODO:
+local res = 0
+for l in aoc.flines() do
+    local secret = tonumber(l)
+    for _ = 1, 2000 do secret = next(secret) end
+    res = res + secret
+end
+assert(res == 17960270302, res)
