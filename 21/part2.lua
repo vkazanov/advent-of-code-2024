@@ -3,9 +3,6 @@ local aoc = require "aoc"
 local Vec = aoc.Vec
 
 local tins = table.insert
-local tcon = table.concat
-local trem = table.remove
-local unpack = table.unpack
 
 -- +---+---+---+
 -- | 7 | 8 | 9 |
@@ -42,7 +39,7 @@ local vec_to_ch = {
 
 local function translate_ch(prev_ch, ch, current_table, control_table)
     local dead_pos = current_table["X"]
-    local new_control_chs = {}
+    local control_chs = {}
     local pos = current_table[prev_ch]
     local tar = current_table[ch]
 
@@ -65,8 +62,8 @@ local function translate_ch(prev_ch, ch, current_table, control_table)
 
             -- find the shortest movement (vert vs hotizontal)
             do
-                local prev_pos = control_table[(#new_control_chs == 0) and "A"
-                    or new_control_chs[#new_control_chs]]
+                local prev_pos = control_table[(#control_chs == 0) and "A"
+                    or control_chs[#control_chs]]
 
                 local hori_pos = control_table[(diff.x < 0) and "<" or ">"]
                 local vert_pos = control_table[(diff.y < 0) and "^" or "v"]
@@ -96,31 +93,30 @@ local function translate_ch(prev_ch, ch, current_table, control_table)
 
         ::do_move::
         for _ = 1, ch_num do
-            tins(new_control_chs, control_ch)
+            tins(control_chs, control_ch)
             pos_diff = pos_diff + vec_to_ch[control_ch]
         end
         pos = pos + pos_diff
         diff = tar - pos
     end
 
-    tins(new_control_chs, "A")
+    tins(control_chs, "A")
 
-    return new_control_chs
+    return control_chs
 end
 
-local function translate(codes, current_table, control_table)
-    local prev_ch = "A"
+local function translate(codes)
     local control_chs = {}
 
-    for _, ch in ipairs(codes) do
-        local ch_control_chs = translate_ch(prev_ch, ch, current_table, control_table)
+    for i, _ in ipairs(codes) do
+        local ch_control_chs = translate_ch(codes[i - 1] or "A", codes[i], numpad_to_pos, keypad_to_pos)
         for _, v in ipairs(ch_control_chs) do tins(control_chs, v) end
-        prev_ch = ch
     end
     return control_chs
 end
 
-local function count_code(prev_ch, ch, depth, current_table, control_table, cache)
+local function count_code(prev_ch, ch, depth, cache)
+    cache = cache or {}
     if depth == 0 then return 1 end
 
     local key = prev_ch .. "/" .. ch .. "/" .. tostring(depth)
@@ -128,10 +124,9 @@ local function count_code(prev_ch, ch, depth, current_table, control_table, cach
 
     local res = 0
 
-    local ch_control_chs = translate_ch(prev_ch, ch, current_table, control_table)
+    local ch_control_chs = translate_ch(prev_ch, ch, keypad_to_pos, keypad_to_pos)
     for i = 1, #ch_control_chs do
-        res = res + count_code(ch_control_chs[i - 1] or "A", ch_control_chs[i], depth - 1,
-                               current_table, control_table, cache)
+        res = res + count_code(ch_control_chs[i - 1] or "A", ch_control_chs[i], depth - 1, cache)
     end
 
     cache[key] = res
@@ -139,14 +134,11 @@ local function count_code(prev_ch, ch, depth, current_table, control_table, cach
     return res
 end
 
-local function translate_count(codes, current_table, control_table, depth)
+local function translate_count(codes, depth)
     local res = 0
-
-    local cache = {}
-    for i = #codes, 1, -1  do
-        res = res + count_code(codes[i-1] or "A", codes[i], depth, current_table, control_table, cache)
+    for i = 1, #codes  do
+        res = res + count_code(codes[i-1] or "A", codes[i], depth)
     end
-
     return res
 end
 
@@ -160,13 +152,8 @@ local input = {
 
 local res = 0
 for code, num in pairs(input) do
-    local numpad_codes = {}
-    for c in code:gmatch(".") do tins(numpad_codes, c) end
-
+    local numpad_codes = aoc.str_to_arr(code)
     local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos)
-
-    local code_num = translate_count(keypad_codes, keypad_to_pos, keypad_to_pos, 25)
-    print(code_num)
-    res = res + code_num * num
+    res = res + translate_count(keypad_codes, 25) * num
 end
 assert(res == 196910339808654, res)
