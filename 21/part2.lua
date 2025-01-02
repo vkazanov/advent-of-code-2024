@@ -42,10 +42,8 @@ local vec_to_ch = {
     ["^"] = aoc.UP, ["v"] = aoc.DOWN,
 }
 
-local function translate(codes, current_table, control_table)
-    local movement_cache = {}
+local function translate(codes, current_table, control_table, movement_cache)
     local control_chs = {}
-
     local dead_pos = current_table["X"]
 
     local prev_ch = "A"
@@ -70,12 +68,12 @@ local function translate(codes, current_table, control_table)
                 -- diagonal movements
                 if diff.y ~= 0 and diff.x ~= 0 then
                     -- dead key on the same horizontal line. Move vertically first.
-                    if (dead_pos.y == pos.y) and (pos.x + diff.x == dead_pos.x) then
+                    if (dead_pos.y == pos.y) and (tar.x == dead_pos.x) then
                         goto vertical
                     end
 
                     -- dead key on the same vertical line . Move horizontally first.
-                    if (dead_pos.x == pos.x) and (pos.y + diff.y == dead_pos.y) then
+                    if (dead_pos.x == pos.x) and (tar.y == dead_pos.y) then
                         goto horizontal
                     end
 
@@ -145,11 +143,13 @@ for code, num in pairs(input) do
     local numpad_codes = {}
     for c in code:gmatch(".") do tins(numpad_codes, c) end
 
-    local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos)
+    local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos, {})
 
-    for i = 1, 2 do
-        keypad_codes = translate(keypad_codes, keypad_to_pos, keypad_to_pos)
+    local movement_cache = {}
+    for i = 1, 25 do
+        keypad_codes = translate(keypad_codes, keypad_to_pos, keypad_to_pos, movement_cache)
         print(i, #keypad_codes)
+        -- print(i, #keypad_codes, tcon(keypad_codes))
     end
     -- print(tcon(keypad_codes))
     res = res + #keypad_codes * num

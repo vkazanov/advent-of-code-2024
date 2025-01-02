@@ -194,23 +194,44 @@ Trie.__index = Trie
 function aoc.Trie()
     return setmetatable({
             branches={},
-            is_leaf=false
+            is_leaf = false,
+            value = nil
     }, Trie)
 end
 
-function Trie:insert(str)
+function Trie:insert(str, value)
     if str == "" then
-        self.is_leaf = true; return
+        self.is_leaf = true
+        self.value = value
+        return
     end
 
     local ch = str:sub(1, 1)
     local next_t = self.branches[ch]
     if not next_t then
-        next_t = Trie.new()
+        next_t = aoc.Trie()
         self.branches[ch] = next_t
     end
 
     next_t:insert(str:sub(2))
+end
+
+function Trie:prefix_value(str)
+    local t, i = self, 1
+
+    while true do
+        if not t then
+            return nil
+        end
+
+        local has_found_leaf = t.is_leaf
+        t = t.branches[str:sub(i, i)]
+        i = i + 1
+
+        if has_found_leaf then
+            return i - 2, t.value
+        end
+    end
 end
 
 function Trie:prefix_lengths_of(str)

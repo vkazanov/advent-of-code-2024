@@ -330,6 +330,20 @@ certain distance speed up the solution massively:
 
 time lua part2-optim.lua -> 150ms
 
+** Day 21 - too many control pads
+
+The problem is formulated as a cascade of recursive control pads. At first it looks like
+an DP optimization problem but examining all the corner cases showed that a greedy
+algorithm can take optimal decisions at all steps. With 1 numpad + 3 keypads I get:
+
+time lua part1.lua -> 2ms
+
+Now, the 2nd part has 1 numpad + 25 keypads. In practise this means that it's impossible
+to store all intermediate control command strings and my algorithm just fell apart.
+
+I'd have to look into doing a DFS instead of multiple control string translation
+applications.
+
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)
