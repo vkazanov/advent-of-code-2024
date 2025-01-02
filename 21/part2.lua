@@ -37,8 +37,15 @@ local keypad_to_pos = {
     ["<"] = Vec{0, 1}, ["v"] = Vec{1, 1}, [">"] = Vec{2, 1},
 }
 
-local function translate(codes, current_table, control_table, movement_cache)
-    movement_cache = movement_cache or {}
+local vec_to_ch = {
+    ["<"] = aoc.LEFT,
+    [">"] = aoc.RIGHT,
+    ["^"] = aoc.UP,
+    ["v"] = aoc.DOWN,
+}
+
+local function translate(codes, current_table, control_table)
+    local movement_cache = {}
     local control_chs = {}
 
     local dead_pos = current_table["X"]
@@ -60,6 +67,7 @@ local function translate(codes, current_table, control_table, movement_cache)
             local diff = tar - pos
             while diff ~= Vec { 0, 0 } do
                 local pos_diff = Vec{0, 0}
+                local control_ch, ch_num
 
                 -- diagonal movements
                 if diff.y ~= 0 and diff.x ~= 0 then
@@ -79,9 +87,8 @@ local function translate(codes, current_table, control_table, movement_cache)
                             or new_control_chs[#new_control_chs]]
 
                         local hori_pos = control_table[(diff.x < 0) and "<" or ">"]
-                        local hori_dist = (hori_pos - prev_pos):manhattan_len()
-
                         local vert_pos = control_table[(diff.y < 0) and "^" or "v"]
+                        local hori_dist = (hori_pos - prev_pos):manhattan_len()
                         local vert_dist = (vert_pos - prev_pos):manhattan_len()
                         if hori_dist <= vert_dist then
                             goto vertical
@@ -89,70 +96,31 @@ local function translate(codes, current_table, control_table, movement_cache)
                             goto horizontal
                         end
                     end
-
-                    -- do a horizontal move, the remainder is vertical
-                    ::horizontal::
-                    if diff.x < 0 then
-                        for _ = 1, math.abs(diff.x) do
-                            tins(new_control_chs, "<")
-                            pos_diff = pos_diff + aoc.LEFT
-                        end
-                    elseif diff.x > 0 then
-                        for _ = 1, math.abs(diff.x) do
-                            tins(new_control_chs, ">")
-                            pos_diff = pos_diff + aoc.RIGHT
-                        end
-                    else assert(false) end
-                    goto next_move
-
-                    -- do a vertical move, the remainder is horizontal
-                    ::vertical::
-                    if diff.y < 0 then
-                        for _ = 1, math.abs(diff.y) do
-                            tins(new_control_chs, "^")
-                            pos_diff = pos_diff + aoc.UP
-                        end
-                    elseif diff.y > 0 then
-                        for _ = 1, math.abs(diff.y) do
-                            tins(new_control_chs, "v")
-                            pos_diff = pos_diff + aoc.DOWN
-                        end
-                    else assert(false) end
-                    goto next_move
                 end
 
-                -- straight horizontal movements
-                if (diff.y == 0) and (diff.x ~= 0) then
-                    for _ = 1, math.abs(diff.x) do
-                        if diff.x < 0 then
-                            tins(new_control_chs, "<")
-                            pos_diff = pos_diff + aoc.LEFT
-                        elseif diff.x > 0 then
-                            tins(new_control_chs, ">")
-                            pos_diff = pos_diff + aoc.RIGHT
-                        end
-                    end
-                    goto next_move
+                ::horizontal::
+                if diff.x ~= 0 then
+                    control_ch = (diff.x < 0) and "<" or ">"
+                    ch_num = math.abs(diff.x)
+                    goto do_move
                 end
 
-                -- straight vertical movements
-                if (diff.y ~= 0) and (diff.x == 0) then
-                    for _ = 1, math.abs(diff.y) do
-                        if diff.y < 0 then
-                            tins(new_control_chs, "^")
-                            pos_diff = pos_diff + aoc.UP
-                        elseif diff.y > 0 then
-                            tins(new_control_chs, "v")
-                            pos_diff = pos_diff + aoc.DOWN
-                        end
-                    end
-                    goto next_move
+                ::vertical::
+                if diff.y ~= 0 then
+                    control_ch = (diff.y < 0) and "^" or "v"
+                    ch_num = math.abs(diff.y)
+                    goto do_move
                 end
 
-                ::next_move::
+                ::do_move::
+                for _ = 1, ch_num do
+                    tins(new_control_chs, control_ch)
+                    pos_diff = pos_diff + vec_to_ch[control_ch]
+                end
                 pos = pos + pos_diff
                 diff = tar - pos
             end
+
             tins(new_control_chs, "A")
         end
 
@@ -181,11 +149,11 @@ for code, num in pairs(input) do
 
     local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos)
 
-    local cache = {}
-    for i = 1, 2 do
-        keypad_codes = translate(keypad_codes, keypad_to_pos, keypad_to_pos, cache)
+    for i = 1, 20 do
+        keypad_codes = translate(keypad_codes, keypad_to_pos, keypad_to_pos)
         print(i, #keypad_codes)
     end
+    -- print(tcon(keypad_codes))
     res = res + #keypad_codes * num
 end
 assert(res == 157908, res)
