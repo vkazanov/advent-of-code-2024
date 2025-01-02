@@ -341,8 +341,11 @@ time lua part1.lua -> 2ms
 Now, the 2nd part has 1 numpad + 25 keypads. In practise this means that it's impossible
 to store all intermediate control command strings and my algorithm just fell apart.
 
-I'd have to look into doing a DFS instead of multiple control string translation
-applications.
+What worked was realizing that the state of every movement is determined by 3 variables:
+previous char, this char and depth of translation. Having this meant that caching becoems
+feasible and the problem turns into a trivial DP instance:
+
+time lua part2.lua -> 8ms
 
 * Reference
 

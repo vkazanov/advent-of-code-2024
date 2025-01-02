@@ -5,9 +5,7 @@ local Vec = aoc.Vec
 local tins = table.insert
 local tcon = table.concat
 local trem = table.remove
-local tunp = table.unpack
-local tpck = table.pack
-local tsrt = table.sort
+local unpack = table.unpack
 
 -- +---+---+---+
 -- | 7 | 8 | 9 |
@@ -110,40 +108,46 @@ local function translate_ch(prev_ch, ch, current_table, control_table)
     return new_control_chs
 end
 
-local function translate(codes, current_table, control_table, depth)
-    local control_chs = codes
+local function translate(codes, current_table, control_table)
+    local prev_ch = "A"
+    local control_chs = {}
 
-    for _ = 1, depth do
-        local prev_ch = "A"
-        local new_control_chs = {}
-        for _, ch in ipairs(control_chs) do
-            local ch_control_chs = translate_ch(prev_ch, ch, current_table, control_table)
-            for _, v in ipairs(ch_control_chs) do tins(new_control_chs, v) end
-            prev_ch = ch
-        end
-        control_chs = new_control_chs
+    for _, ch in ipairs(codes) do
+        local ch_control_chs = translate_ch(prev_ch, ch, current_table, control_table)
+        for _, v in ipairs(ch_control_chs) do tins(control_chs, v) end
+        prev_ch = ch
     end
-
-
     return control_chs
 end
 
-local function translate_count(codes, current_table, control_table, depth)
-    local control_chs = codes
+local function count_code(prev_ch, ch, depth, current_table, control_table, cache)
+    if depth == 0 then return 1 end
 
-    for _ = 1, depth do
-        local prev_ch = "A"
-        local new_control_chs = {}
-        for _, ch in ipairs(control_chs) do
-            local ch_control_chs = translate_ch(prev_ch, ch, current_table, control_table)
-            for _, v in ipairs(ch_control_chs) do tins(new_control_chs, v) end
-            prev_ch = ch
-        end
-        control_chs = new_control_chs
+    local key = prev_ch .. "/" .. ch .. "/" .. tostring(depth)
+    if cache[key] then return cache[key] end
+
+    local res = 0
+
+    local ch_control_chs = translate_ch(prev_ch, ch, current_table, control_table)
+    for i = 1, #ch_control_chs do
+        res = res + count_code(ch_control_chs[i - 1] or "A", ch_control_chs[i], depth - 1,
+                               current_table, control_table, cache)
     end
 
+    cache[key] = res
 
-    return #control_chs
+    return res
+end
+
+local function translate_count(codes, current_table, control_table, depth)
+    local res = 0
+
+    local cache = {}
+    for i = #codes, 1, -1  do
+        res = res + count_code(codes[i-1] or "A", codes[i], depth, current_table, control_table, cache)
+    end
+
+    return res
 end
 
 local input = {
@@ -159,9 +163,10 @@ for code, num in pairs(input) do
     local numpad_codes = {}
     for c in code:gmatch(".") do tins(numpad_codes, c) end
 
-    local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos, 1)
-    local code_num = translate_count(keypad_codes, keypad_to_pos, keypad_to_pos, 2)
+    local keypad_codes = translate(numpad_codes, numpad_to_pos, keypad_to_pos)
+
+    local code_num = translate_count(keypad_codes, keypad_to_pos, keypad_to_pos, 25)
     print(code_num)
     res = res + code_num * num
 end
-assert(res == 157908, res)
+assert(res == 196910339808654, res)
