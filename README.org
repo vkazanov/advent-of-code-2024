@@ -359,7 +359,10 @@ time lua part1.lua -> 380ms
 
 time lua part2.lua -> 4.5s
 
-Kind of slow. This really looks like a matrix multiplication problem.
+Kind of slow. Switching hash keys from strings to integers and inlining a few functions
+calls in the hot loop did help surprisingly well:
+
+time lua part2.lua -> 1s
 
 * Reference
 
