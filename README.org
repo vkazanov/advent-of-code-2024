@@ -364,6 +364,19 @@ calls in the hot loop did help surprisingly well:
 
 time lua part2.lua -> 1s
 
+** Day 23 - LAN cliques
+
+An algo problem. Find cliques of a given size in Part1, then find the largest clique in
+Par2. 2 approaches possible: take a set of every vertice and check if any other vertice is
+part of the same clique - this is brute force; or use the backtracking Bron–Kerbosch algo,
+which optimises things a bit.
+
+time lua part1.lua -> 900ms
+
+time lua part1.lua -> 900ms
+
+Most of the work was writing a Set data structure.
+
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)
