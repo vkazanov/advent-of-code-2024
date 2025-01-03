@@ -373,9 +373,20 @@ which optimises things a bit.
 
 time lua part1.lua -> 900ms
 
-time lua part1.lua -> 900ms
+time lua part2.lua -> 1s
 
 Most of the work was writing a Set data structure.
+
+** Day 24 - summator data flow
+
+Implementation + tinkering. In the first part we were asked to implement a data flow
+device calculating something through bit logic. In the 2nd part I just dumped the tree and
+found all 4 misplaced swaps. Could have automated this somehow but it felt easier to jump
+look and fix.
+
+time lua part1.lua -> 5ms
+
+time lua part2.lua -> 6ms
 
 * Reference
 

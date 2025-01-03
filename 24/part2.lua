@@ -4,15 +4,6 @@ local Deque = require "deque"
 local unpack = table.unpack
 local tins = table.insert
 
-local input = [[
-x00 AND y00 -> z05
-x01 AND y01 -> z02
-x02 AND y02 -> z01
-x03 AND y03 -> z03
-x04 AND y04 -> z04
-x05 AND y05 -> z00
-]]
-
 local OPS = {
     AND = function(l, r) return l and r end,
     OR = function(l, r) return l or r end,
@@ -20,18 +11,12 @@ local OPS = {
 }
 
 local gates = {}
-local wire2init = {}
-for line in input:gmatch("[^\n]+") do
--- for line in aoc.flines() do
-    local wire, value = line:match("([^:]+): (%d)")
-    if wire then
-        print("wire " .. line)
-        wire2init[wire] = value == "1"
-        goto continue
-    end
+for line in aoc.flines() do
+    local wire = line:match("([^:]+): (%d)")
+    if wire then goto continue end
+
     local left, op, right, target = line:match("([^%s]+)%s+([^%s]+)%s+([^%s]+)%s+->%s+([^%s]+)")
     if left then
-        print("gate " .. line)
         assert(OPS[op])
         tins(gates, { left, right, OPS[op], target })
     end
@@ -43,9 +28,9 @@ local function target_swap(target, swaps)
     return swaps[target] or target
 end
 
-local function run(wire2init, gates_init, swaps)
+local function run(wire2value_init, gates_init, swaps)
     local wire2value = {}
-    for wire, value in pairs(wire2init) do wire2value[wire] = value end
+    for wire, value in pairs(wire2value_init) do wire2value[wire] = value end
 
     local queue = Deque.new()
     for _, gate in pairs(gates_init) do queue:push_right(gate) end
@@ -59,7 +44,6 @@ local function run(wire2init, gates_init, swaps)
         end
 
         wire2value[target_swap(target, swaps)] = op(wire2value[left], wire2value[right])
-        -- wire2value[target] = op(wire2value[left], wire2value[right])
         ::continue::
     end
 
@@ -90,20 +74,31 @@ local function bin2wires(wire_name, bin_str)
     return result
 end
 
-local x_wires = bin2wires("x", "101010")
-local y_wires = bin2wires("y", "101100")
-local expect = aoc.bin2dec(    "101000")
+local x_wires = bin2wires("x", "11111111111111111111111111111111111111111111")
+local y_wires = bin2wires("y", "00000000000000000000000000000000000000000000")
+local expect = aoc.bin2dec(    "11111111111111111111111111111111111111111111")
 
-wire2init = {}
+local wire2init = {}
 for k, v in pairs(x_wires) do wire2init[k] = v end
 for k, v in pairs(y_wires) do wire2init[k] = v end
 
 local swaps = {
-    ["z05"] = "z00",
-    ["z00"] = "z05",
+    ["bpt"] = "krj",
+    ["krj"] = "bpt",
 
-    ["z02"] = "z01",
-    ["z01"] = "z02",
+    ["z31"] = "mfm",
+    ["mfm"] = "z31",
+
+    ["z06"] = "fkp",
+    ["fkp"] = "z06",
+
+    ["z11"] = "ngr",
+    ["ngr"] = "z11",
 }
+
 local res = run(wire2init, gates, swaps)
 assert(res == expect, res)
+
+local swaps_output = { "bpt", "krj", "z31", "mfm", "z06", "fkp", "z11", "ngr" }
+table.sort(swaps_output)
+print(table.concat(swaps_output, ","))
