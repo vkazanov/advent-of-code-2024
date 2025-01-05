@@ -388,6 +388,13 @@ time lua part1.lua -> 5ms
 
 time lua part2.lua -> 6ms
 
+** Day 25 - keys and locks
+
+A trivial puzzle: checked all locks again all keys. It took more time to write the parser
+than solve the puzzle.
+
+time lua part1.lua -> 5ms
+
 * Reference
 
  - https://garoof.no/notes/aoc-lua.html - a few Lua tricks (vector, foldl, etc)
