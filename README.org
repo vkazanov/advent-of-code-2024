@@ -1,3 +1,5 @@
+All AoC years moved to a [[https://github.com/vkazanov/advent-of-code][single repo]]
+
 [[https://adventofcode.com/2024][Advent of Code]] 2024 solutions.
 
 2024 is a year of Lua for me.
